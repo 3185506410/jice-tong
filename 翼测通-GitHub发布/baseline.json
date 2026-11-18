@@ -1,0 +1,72 @@
+{
+  "captured_at": "2026-11-18T09:57:06",
+  "account": "3185506410",
+  "repo": "jice-tong",
+  "public_repos_before": 0,
+  "followers_before": 0,
+  "stars": 0,
+  "forks": 0,
+  "watchers": 0,
+  "views": 0,
+  "unique_visitors": 0,
+  "clones": 0,
+  "note": "仓库创建被 GitHub connector 403 拒绝，基线为账号当前状态；仓库建成后需重新抓一次 T0 基线",
+  "files": [
+    {
+      "path": "LICENSE",
+      "md5": "73fa5c57ae41426e06fb88a96895b67e"
+    },
+    {
+      "path": "README.md",
+      "md5": "9947e1f658ab30b9461d4498b2f8e254"
+    },
+    {
+      "path": "SKILL.md",
+      "md5": "fca4bff9340e2013c7f27f47131d1a7f"
+    },
+    {
+      "path": "assets/学业记录.html",
+      "md5": "11ce9358855da6d6b0622eecf6caec76"
+    },
+    {
+      "path": "gitignore",
+      "md5": "3427b4db74c6c1f95da5c5b6b099ab6d"
+    },
+    {
+      "path": "references/冒烟测试-smoke_credit_home.js",
+      "md5": "0fa82f68fee046f741e2574076be344d"
+    },
+    {
+      "path": "references/培养方案解析要点.md",
+      "md5": "505023118b0b97b84b31fd7605224239"
+    },
+    {
+      "path": "references/推免附加分计分细则.md",
+      "md5": "cf9571cade5c25968106491e318f93bf"
+    },
+    {
+      "path": "references/绩点与平时分口径.md",
+      "md5": "4aca74a375097c7a2536682ec42f6bcf"
+    },
+    {
+      "path": "references/自检与复跑.md",
+      "md5": "e12a1b365c1f63bdcb6ef91bc834f27d"
+    },
+    {
+      "path": "scripts/credit_ledger.py",
+      "md5": "d6d87721519c30c78285f60299ed311f"
+    },
+    {
+      "path": "scripts/cross_system.py",
+      "md5": "6dc9e16ba63d711371478c09394510e0"
+    },
+    {
+      "path": "scripts/gpa_ledger.py",
+      "md5": "1f56d76da61cdd61ce3a53f7ce32c775"
+    },
+    {
+      "path": "scripts/zongce_ledger.py",
+      "md5": "53cfa1df06fa83fe7e605b781ff02d17"
+    }
+  ]
+}

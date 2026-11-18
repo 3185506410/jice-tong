@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="calm">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>冀测通 · 学业记录</title>
+<style>
+:root{
+  --bg:#F2F5F6; --card:#FFFFFF; --ink:#1E2B32; --ink2:#5B6B73; --ink3:#8B9AA2;
+  --line:#E2E8EA; --pri:#1F5C6B; --pri2:#2E7E74; --tint:#E9F2F1; --warn:#A9503F;
+  --shadow:0 1px 2px rgba(24,42,48,.05),0 8px 24px rgba(24,42,48,.06);
+  --r:14px;
+}
+html[data-theme="dark"]{
+  --bg:#12181B; --card:#1A2226; --ink:#E4EDEF; --ink2:#9DB0B6; --ink3:#6E8288;
+  --line:#2A363B; --pri:#6FB3AE; --pri2:#8AC7BE; --tint:#1F2C30; --warn:#D98474;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px 64px}
+
+/* 顶部固定导入区 */
+.importbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,var(--bg) 72%,rgba(242,245,246,0));padding:12px 0 10px}
+html[data-theme="dark"] .importbar{background:linear-gradient(180deg,var(--bg) 72%,rgba(18,24,27,0))}
+.drop{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px dashed var(--line);
+  border-radius:var(--r);padding:12px 16px;box-shadow:var(--shadow);transition:.18s}
+.drop.over{border-color:var(--pri);background:var(--tint)}
+.drop .ic{width:34px;height:34px;border-radius:10px;background:var(--tint);color:var(--pri);
+  display:grid;place-items:center;font-size:17px;flex:none}
+.drop .t{font-weight:600;font-size:14px}
+.drop .s{font-size:12px;color:var(--ink3)}
+.drop .go{margin-left:auto;background:var(--pri);color:#fff;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600}
+
+/* 头部 */
+.head{display:flex;align-items:center;gap:14px;margin:6px 0 14px}
+.brand{font-weight:700;letter-spacing:.02em}
+.brand em{font-style:normal;color:var(--pri)}
+.years{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:3px}
+.years button{padding:5px 11px;border-radius:8px;font-size:13px;color:var(--ink2)}
+.years button.on{background:var(--pri);color:#fff;font-weight:600}
+.spacer{flex:1}
+.iconbtn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--card);
+  display:grid;place-items:center;color:var(--ink2)}
+
+/* 总分 */
+.hero{background:var(--card);border-radius:20px;padding:22px 24px;box-shadow:var(--shadow);display:flex;align-items:center;gap:24px}
+.hero .num{font-size:64px;font-weight:750;letter-spacing:-.02em;line-height:1;color:var(--pri)}
+.hero .num small{font-size:18px;font-weight:500;color:var(--ink3);margin-left:6px}
+.hero .lab{font-size:13px;color:var(--ink3);margin-top:6px}
+.hero .eff{margin-left:auto;text-align:right;font-size:12.5px;color:var(--ink2);line-height:1.9}
+.hero .eff b{color:var(--ink);font-weight:600}
+.hero .eff .eq{color:var(--ink3)}
+
+/* 入口卡 */
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;
+  text-align:left;box-shadow:var(--shadow);transition:.16s;position:relative}
+.tile:hover{transform:translateY(-2px);border-color:var(--pri)}
+.tile .k{font-size:12.5px;color:var(--ink2)}
+.tile .v{font-size:26px;font-weight:700;margin-top:4px}
+.tile .v small{font-size:12px;color:var(--ink3);font-weight:500}
+.tile .p{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.tile .dot{position:absolute;right:12px;top:12px;width:6px;height:6px;border-radius:50%;background:var(--pri2)}
+
+.sub{display:flex;gap:12px;margin-top:12px}
+.chip{flex:1;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.chip .n{font-size:22px;font-weight:700}
+.chip .c{font-size:12px;color:var(--ink3)}
+.chip .r{margin-left:auto;color:var(--ink3)}
+
+/* 屏幕 */
+.screen{display:none}
+.screen.act{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.screen.act{animation:none}}
+.crumb{display:flex;align-items:center;gap:8px;margin:4px 0 12px;color:var(--ink3);font-size:13px}
+.crumb button{color:var(--pri);font-weight:600}
+.crumb .back{display:inline-flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--ink);margin-right:4px;box-shadow:0 1px 2px rgba(16,26,30,.06)}
+.crumb .back:hover{border-color:var(--pri);color:var(--pri)}
+.crumb .back:active{transform:translateY(1px)}
+.sideops{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.opbtn{border:1px solid var(--line);background:transparent;color:var(--ink3);border-radius:9px;padding:6px 12px;font-size:12.5px}
+.opbtn:hover{border-color:var(--pri);color:var(--pri)}
+.opbtn.warn:hover{border-color:var(--warn);color:var(--warn)}
+.item input::-webkit-outer-spin-button,.item input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.item input{-moz-appearance:textfield}
+.tagbase{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:6px;background:var(--tint);color:var(--pri);font-size:11px;font-weight:700;vertical-align:1px}
+.modfoot{display:flex;align-items:center;gap:12px;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.docbar{display:flex;gap:10px;align-items:center;margin:12px 0 14px;flex-wrap:wrap}
+.doctext{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 22px;font-size:13.5px;line-height:1.95;max-height:66vh;overflow:auto}
+.doctext .ln{white-space:pre-wrap;color:var(--ink2);border-radius:6px;padding:0 2px}
+.doctext .ln.head{color:var(--pri);font-weight:700;margin-top:12px}
+.doctext .ln.hl{background:#FFF3B0;color:#1a1a1a;box-shadow:0 0 0 4px #FFF3B0}
+html[data-theme="dark"] .doctext .ln.hl{background:#6b5a12;color:#fff;box-shadow:0 0 0 4px #6b5a12}
+.doctext mark{background:#FFD84D;color:#1a1a1a;border-radius:3px}
+.opendoc{border:1px solid var(--line);background:var(--tint);color:var(--pri);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:600;margin-top:2px}
+.opendoc:hover{border-color:var(--pri)}
+.h2{font-size:20px;font-weight:700;margin:0 0 2px}
+.h2s{font-size:12.5px;color:var(--ink3);margin-bottom:14px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--line)}
+
+/* 课程行 */
+.rows{overflow:hidden}
+.row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--tint)}
+.row .nm{font-weight:600}
+.row .meta{font-size:12px;color:var(--ink3);margin-top:2px}
+.row .sc{margin-left:auto;font-size:19px;font-weight:700;color:var(--pri)}
+.row .sc.wait{color:var(--ink3);font-size:14px;font-weight:500}
+.row .arw{color:var(--ink3);margin-left:8px}
+
+/* 详情块 */
+.blk{background:var(--card);border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.blk-h{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.blk-h .t{font-weight:700}
+.blk-h .s{margin-left:auto;font-size:12.5px;color:var(--ink3)}
+.blk-b{padding:8px 18px 14px}
+.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.item:last-child{border-bottom:0}
+.item .nm{font-size:14px}
+.item .h{font-size:11.5px;color:var(--ink3)}
+.item input{width:74px;text-align:right;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:6px 9px;font-variant-numeric:tabular-nums}
+.item input:focus{outline:2px solid var(--tint);border-color:var(--pri)}
+.item .of{font-size:12px;color:var(--ink3);width:52px}
+.item .src{margin-left:auto;color:var(--ink3);font-size:12px}
+.item .src:hover{color:var(--pri)}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;background:var(--pri);border-radius:99px}
+
+/* 弹窗 */
+.mask{position:fixed;inset:0;background:rgba(16,26,30,.42);display:none;place-items:center;z-index:100;padding:20px}
+.mask.show{display:grid}
+.modal{background:var(--card);border-radius:18px;max-width:640px;width:100%;max-height:84vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.modal .mh{display:flex;align-items:center;padding:18px 20px 10px}
+.modal .mh b{font-size:16px}
+.modal .mh button{margin-left:auto;color:var(--ink3);font-size:20px;line-height:1}
+.modal .mb{padding:0 20px 20px;font-size:14px;color:var(--ink2)}
+.modal .mb p{margin:8px 0}
+.kv{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.kv .k{color:var(--ink3);width:86px;flex:none}
+.quote{background:var(--bg);border-left:3px solid var(--pri);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.8;margin:10px 0}
+.btnrow{display:flex;gap:10px;margin-top:14px}
+.btn{border-radius:10px;padding:9px 16px;font-size:13.5px;font-weight:600;border:1px solid var(--line)}
+.btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}
+.btn.gh{background:transparent;color:var(--ink2)}
+textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:12px;font:13px/1.7 inherit;resize:vertical}
+.hint{font-size:12px;color:var(--ink3);margin-top:6px}
+
+/* 侧层入口 */
+.side{display:flex;gap:12px;margin-top:12px}
+.side.wrap3{flex-wrap:wrap}
+.side.wrap3 .sidebtn{min-width:calc(50% - 6px)}
+.sidebtn{flex:1;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;text-align:left;box-shadow:var(--shadow);transition:.16s}
+.sidebtn:hover{transform:translateY(-2px);border-color:var(--pri)}
+.sidebtn .t{font-weight:700;font-size:14.5px}
+.sidebtn .s{font-size:12px;color:var(--ink3);margin-top:2px}
+
+/* 学分明细 */
+.grp{font-size:13px;font-weight:700;color:var(--pri);margin:16px 0 6px}
+.sz{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+.sz th,.sz td{border:1px solid var(--line);padding:7px 10px;text-align:left}
+.sz th{background:var(--tint);font-weight:600;color:var(--ink2);font-size:12px}
+.sz td input{width:64px;text-align:right;border:1px solid var(--line);background:var(--bg);
+  border-radius:8px;padding:4px 8px;font-variant-numeric:tabular-nums}
+.conflict{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warn);
+  border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.8}
+.conflict .cw{font-weight:700;color:var(--warn)}
+.conflict .cx{color:var(--ink2)}
+.conflict .ca{color:var(--ink3)}
+
+/* 档案袋 */
+.arch-stats{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.arch-stat{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:11.5px;color:var(--ink3)}
+.arch-stat b{display:block;font-size:16px;color:var(--ink)}
+.arch-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.a-btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--ink2)}
+.a-btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}
+.a-btn.mini{padding:5px 10px;font-size:12px}
+.a-btn:hover{border-color:var(--pri);color:var(--pri)}
+.a-btn.pri:hover{color:#fff}
+.arch-tools{display:flex;gap:8px;align-items:center;margin:12px 0}
+.a-search{flex:1;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px;font:inherit;font-size:13px}
+.arch-layout{display:flex;gap:14px;align-items:flex-start}
+.folder{width:230px;flex:none;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;box-shadow:var(--shadow)}
+.folder-h{font-size:12px;font-weight:700;color:var(--ink3);padding:2px 6px 8px}
+.f-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:8px 8px;border-radius:9px;font-size:13.5px}
+.f-item:hover{background:var(--tint)}
+.f-item.on{background:var(--tint);font-weight:700;color:var(--pri)}
+.f-ico{width:20px;text-align:center}
+.f-cnt{margin-left:auto;font-size:11.5px;color:var(--ink3)}
+.f-sub{font-size:11px;color:var(--ink3);padding:0 8px 6px 36px}
+.a-list{flex:1;min-width:0}
+.a-card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.a-card:hover{border-color:var(--pri)}
+.a-thumb{width:38px;height:38px;border-radius:10px;background:var(--tint);display:grid;place-items:center;font-size:18px;flex:none}
+.a-main{min-width:0}
+.a-t{font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.a-m{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.a-side{margin-left:auto;text-align:right;flex:none}
+.a-score{font-size:18px;font-weight:750;color:var(--pri)}
+.a-score.wait{font-size:12.5px;font-weight:500;color:var(--ink3)}
+.a-state{display:inline-block;font-size:10.5px;border-radius:99px;padding:2px 8px;margin-top:3px}
+.a-state.st-ok{background:#E3F0E9;color:#1E6B3A}
+.a-state.st-sync{background:var(--tint);color:var(--pri)}
+.a-state.st-wait{background:#F5EDD8;color:#8A6A1F}
+.a-state.st-no{background:#F3E3DF;color:var(--warn)}
+html[data-theme="dark"] .a-state.st-ok{background:#1D3226;color:#7FC79A}
+html[data-theme="dark"] .a-state.st-wait{background:#332B18;color:#D9B86A}
+html[data-theme="dark"] .a-state.st-no{background:#362320;color:var(--warn)}
+.a-empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--r);
+  padding:28px 20px;text-align:center;color:var(--ink3);font-size:13px;line-height:1.9}
+.d-grid{display:flex;gap:16px}
+.d-grid>div{flex:1;min-width:0}
+.d-img{background:var(--bg);border:1px solid var(--line);border-radius:10px;min-height:120px;
+  display:grid;place-items:center;font-size:12px;color:var(--ink3);overflow:hidden}
+.d-img img{max-width:100%;max-height:280px}
+.d-kv{font-size:12.5px;color:var(--ink2);line-height:2}
+.d-calc{background:var(--bg);border-left:3px solid var(--pri);border-radius:8px;padding:10px 12px;
+  font-size:12.5px;line-height:1.8;margin:8px 0;color:var(--ink2)}
+.d-man{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.d-man input{border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:7px 10px;width:90px}
+.d-man .cl{flex:1;width:auto}
+.d-acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.u-fld{margin-bottom:10px}
+.m-lab{font-size:12px;color:var(--ink3);margin-bottom:4px}
+.u-sel,.u-in{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:8px 10px;font:inherit;font-size:13.5px}
+.u-in.cl{width:auto;flex:1}
+.u-chk{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--ink2)}
+.u-chk input{width:auto}
+.u-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.u-chip{background:var(--tint);color:var(--pri);border-radius:99px;padding:3px 10px;font-size:11.5px}
+.p-score{font-size:24px;font-weight:750;color:var(--pri)}
+.m-opt{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:8px 16px;margin:4px;font-size:13.5px}
+.m-opt.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+
+@media(max-width:860px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hero{flex-direction:column;align-items:flex-start;gap:10px}
+  .hero .eff{margin-left:0;text-align:left}
+  .sub{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="importbar">
+    <div class="drop" id="drop">
+      <div class="ic">↓</div>
+      <div>
+        <div class="t">拖入奖状 / 成绩单 / 打卡记录</div>
+        <div class="s">txt 直接存档；PDF / 图片登记名称留档，计分用「粘贴解析」贴文字</div>
+      </div>
+      <button class="go" onclick="UI.pickFile()">选择文件</button>
+      <input type="file" id="file" multiple hidden>
+    </div>
+  </div>
+
+  <div class="head">
+    <div class="brand">冀测通<em> · 学业记录</em></div>
+    <div class="years" id="years"></div>
+    <div class="spacer"></div>
+    <button class="iconbtn" onclick="UI.toggleTheme()" title="切换主题">◐</button>
+  </div>
+
+  <!-- 首页 -->
+  <section class="screen act" id="sc-home">
+    <div class="hero">
+      <div>
+        <div class="num" id="totalNum">—<small>/ 120</small></div>
+        <div class="lab" id="totalLab">综测总分 · 大一</div>
+      </div>
+      <div class="eff">
+        <div><b>+1 分能涨多少</b><span class="eq"> → 总分</span></div>
+        <div>学术科技 <b>×1.0</b>　绩点 <b>×0.7</b></div>
+        <div>德育 / 体育 <b>×0.1</b>　美育 / 劳育 <b>×0.05</b></div>
+      </div>
+    </div>
+
+    <div class="grid" id="tiles"></div>
+
+    <div class="sub">
+      <div class="chip"><div><div class="n" id="creditNum">0</div><div class="c">已修学分 / 150</div></div>
+        <div class="r"><button class="btn gh" onclick="UI.source('credit')">来源</button></div></div>
+      <div class="chip"><div><div class="n" id="matNum">0</div><div class="c">归档材料</div></div>
+        <div class="r"><button class="btn gh" onclick="UI.openMaterials()">查看</button></div></div>
+      <div class="chip"><div><div class="n" id="dedNum">0</div><div class="c">扣分</div></div>
+        <div class="r"><button class="btn gh" onclick="UI.go('ded')">明细</button></div></div>
+    </div>
+
+    <div class="side wrap3">
+      <button class="sidebtn" onclick="UI.go('credits')"><div class="t">学分明细 ›</div>
+        <div class="s">16 个模块逐条来自培养方案 · 两处矛盾照实呈现</div></button>
+      <button class="sidebtn" onclick="UI.go('arch')"><div class="t">综测档案袋 ›</div>
+        <div class="s">材料归档 · 按细则匹配算分 · 导出 zip</div></button>
+      <button class="sidebtn" onclick="UI.go('doc')"><div class="t">原文依据 ›</div>
+        <div class="s">综测细则 / 推免办法全文内嵌 · 从「来源」直接跳到那一句</div></button>
+    </div>
+
+    <div class="sideops">
+      <button class="opbtn" onclick="ARCH.useSample()">载入样例数据</button>
+      <button class="opbtn warn" onclick="ARCH.clearAll()">清空重来</button>
+    </div>
+  </section>
+
+  <!-- 绩点列表 -->
+  <section class="screen" id="sc-gpa" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span>绩点</span></div>
+    <div class="h2">绩点 <span id="gpaScore"></span></div>
+    <div class="h2s">课程加权平均分 · 占综测 70%</div>
+    <div class="card rows" id="courseRows"></div>
+    <div class="blk" id="gpaSampleBox" style="margin-top:14px"></div>
+  </section>
+
+  <!-- 课程详情 -->
+  <section class="screen" id="sc-course" data-back="gpa">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><button onclick="UI.go('gpa')">绩点</button><span>›</span><span id="cName"></span></div>
+    <div class="h2" id="cTitle"></div>
+    <div class="h2s" id="cSub"></div>
+
+    <div class="blk">
+      <div class="blk-h"><div class="t">导入材料</div><div class="s">老师给的评分规则 / 成绩单</div></div>
+      <div class="blk-b">
+        <div class="drop" id="drop2" style="margin:6px 0 4px">
+          <div class="ic">↓</div>
+          <div><div class="t">拖入或粘贴</div><div class="s">自动抽「平时构成」与「期末分」</div></div>
+          <button class="go" onclick="UI.parseDlg()">粘贴解析</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><div class="t">平时分</div><div class="s" id="partSum"></div></div>
+      <div class="blk-b" id="partItems"></div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><div class="t">期末分</div><div class="s" id="finalSum"></div></div>
+      <div class="blk-b" id="finalBox"></div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h"><div class="t">课程成绩</div><div class="s" id="cScore"></div><button class="src" onclick="UI.source('course')">来源</button></div>
+      <div class="blk-b"><div class="hint" id="cFormula"></div><div class="bar"><i id="cBar" style="width:0"></i></div></div>
+    </div>
+  </section>
+
+  <!-- 模块详情 -->
+  <section class="screen" id="sc-mod" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span id="mCrumb"></span></div>
+    <div class="h2" id="mTitle"></div>
+    <div class="h2s" id="mSub"></div>
+    <div class="blk">
+      <div class="blk-h"><div class="t" id="mScoreT">—</div>
+        <div class="s" id="mWeight"></div>
+        <button class="src" onclick="UI.source('block')">来源</button></div>
+      <div class="blk-b"><div class="bar"><i id="mBar" style="width:0"></i></div>
+        <div class="hint" id="mHint"></div></div>
+    </div>
+    <div class="card rows" id="mItems"></div>
+  </section>
+
+  <!-- 材料 -->
+  <section class="screen" id="sc-mat" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span>归档材料</span></div>
+    <div class="h2">归档材料</div>
+    <div class="h2s">点任意一条可回看原件</div>
+    <div class="card rows" id="matRows"></div>
+  </section>
+
+  <!-- 学分明细（侧层） -->
+  <section class="screen" id="sc-credits" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span>学分明细</span></div>
+    <div class="h2">学分明细</div>
+    <div class="h2s">16 个模块，逐条来自培养方案。填「已修」和首页毕业总账分开记，用来逐模块核对。</div>
+    <div class="card" style="padding:4px 16px 16px" id="creditsWrap"></div>
+  </section>
+
+  <!-- 综测档案袋（侧层） -->
+  <section class="screen" id="sc-arch" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span>综测档案袋</span></div>
+    <div id="archWrap"></div>
+  </section>
+
+  <!-- 扣分明细：细则第六条 6 项，逐项填次数，可索引原文 -->
+  <section class="screen" id="sc-ded" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span>扣分明细</span></div>
+    <div class="h2">扣分明细 <span id="dedSum"></span></div>
+    <div class="h2s" id="dedSub">细则第六条只列下面 6 项，没列的一律不扣；填次数（或负分值）自动累加，每项可点「来源」跳到原文那一句。</div>
+    <div class="card rows" id="dedRows"></div>
+    <div class="modfoot"><button class="btn pri" onclick="UI.commitDed()">✓ 确认扣分</button>
+      <span class="hint" id="dedState">扣分合计会从综测总分里直接扣除</span></div>
+  </section>
+
+  <!-- 原文依据：内嵌细则与推免办法全文，供「来源」跳转定位 -->
+  <section class="screen" id="sc-doc" data-back="home">
+    <div class="crumb"><button class="back" onclick="UI.back()">← 返回</button><button onclick="UI.go('home')">综测</button><span>›</span><span>原文依据</span></div>
+    <div class="h2">原文依据</div>
+    <div class="h2s" id="docSub">原文全文随文件一起走，离线也能查；从任一条目的「来源」点「打开原文」会直接跳到那一句并高亮。</div>
+    <div class="docbar">
+      <div class="years" id="docTabs"></div>
+      <input class="a-search" id="docSearch" placeholder="搜关键词：美育 / 荣誉称号 / 推免 / 竞赛 …" oninput="UI.docSearch(this.value)">
+      <span class="hint" id="docHit"></span>
+    </div>
+    <div class="doctext" id="docText"></div>
+  </section>
+</div>
+
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+
+<script>
+const DATA = {"blocks": [{"key": "de", "name": "德育", "weight": 0.1, "cap": 100, "base": 75, "addonCap": 25, "src": "细则第六条（一）", "hint": "基础分75（自评10%+互评45%+辅导员45%）＋附加分25", "items": [{"id": "deBase", "t": "德育基础分", "max": 75.0, "isBase": true, "s": "细则第六条（一）1", "hi": "0–75 分 · 自评 10% + 班级互评 45% + 辅导员 45%", "d": "德育基础分（75分）由本人自评、班级学生互评和辅导员评议组成，从思想政治素质、道德品质修养、安全法纪素养三方面测评，各 25 分。计算公式：德育基础分 = 本人自评成绩*10% + 班级学生互评成绩*45% + 辅导员评议成绩*45%；学生互评与辅导员评议分 A、B、C 三个等级，分别计 75、70、65 分。未参加测评或未达标的，该项为 0，不默认白送。", "doc": "zongce", "line": 30}, {"id": "de0", "t": "学生干部任职考核", "max": 20.0, "d": "班长、团支书、学习委员、校/院两级学生会主席团成员和部门负责人：考核**优秀加 20 分**、良好加 15 分、合格加 10 分、不合格不予加分。其余学生干部参照上述标准**减半**。", "s": "细则第六条（一）2（1）", "hi": "20 分 / 项", "isBase": false, "doc": "zongce", "line": 56}, {"id": "de1", "t": "荣誉称号", "max": 25.0, "d": "**国家级荣誉称号加 25 分**；省部级荣誉或校长荣誉奖、五四之星加 15 分；其他校级荣誉称号加 10 分。", "s": "细则第六条（一）2（2）", "hi": "国家级 25 分", "isBase": false, "doc": "zongce", "line": 60}, {"id": "de2", "t": "突出贡献", "max": 25.0, "d": "在校期间做出突出贡献、在社会上产生重大影响的学生加 10–25 分。**区间值，按实际认定等级计**。", "s": "细则第六条（一）2（3）", "hi": "10–25 分", "isBase": false, "doc": "zongce", "line": 62}, {"id": "de3", "t": "书面感谢或通报表扬", "max": 15.0, "d": "见义勇为、拾金不昧、志愿献爱心、公益服务、精神文明服务等，获**校级书面感谢或通报表扬 +5 分**、省级部级或组织 +10 分、国家级 +15 分。", "s": "细则第六条（一）2（4）①", "hi": "最高 15 分", "isBase": false, "doc": "zongce", "line": 66}, {"id": "de4", "t": "党校及团校学习结业", "max": 5.0, "d": "党校及团校学习并结业 +5 分。", "s": "细则第六条（一）2（4）②", "hi": "5 分", "isBase": false, "doc": "zongce", "line": 68}, {"id": "de5", "t": "社会实践团队获奖", "max": 25.0, "d": "社会实践团队获国家级、省(市)部级、校级奖励，**团长/团员分别 +25/20、+15/10、+8/4 分**。", "s": "细则第六条（一）2（4）③", "hi": "团长最高 25 分", "isBase": false, "doc": "zongce", "line": 69}]}, {"key": "ti", "name": "体育", "weight": 0.1, "cap": 100, "base": 0, "addonCap": 100, "src": "细则第六条（三）", "hint": "体测 40 + 体育课 40 + 身心活动 20", "items": [{"id": "ti0", "t": "《国家学生体质健康标准》测试", "max": 40.0, "d": "优秀得 40 分、良好得 32 分、及格得 24 分、不及格得 0 分。", "s": "细则第六条（三）1", "hi": "40 分", "isBase": false, "doc": "zongce", "line": 83}, {"id": "ti1", "t": "大学体育课成绩", "max": 40.0, "d": "**大一、大二**按当学年两学期体育课平均成绩的 40% 计分；**大三、大四**按完成阳光体育打卡任务计分，达标直接计 40 分，不达标得 0 分。", "s": "细则第六条（三）2", "hi": "40 分", "isBase": false, "doc": "zongce", "line": 85}, {"id": "ti2", "t": "身心健康活动评价", "max": 20.0, "d": "参加各级体育比赛、体育类社团、早操、课外体育活动、心理素质教育活动或获奖的，**总分不得超过 20 分**。详见下方赛事加分表。", "s": "细则第六条（三）3", "hi": "累计不超过 20 分", "isBase": false, "doc": "zongce", "line": 88}]}, {"key": "mei", "name": "美育", "weight": 0.05, "cap": 100, "base": 80, "addonCap": 20, "src": "细则第六条（四）", "hint": "基础分 80（参加即得）+ 附加分 20（获奖，封顶）", "items": [{"id": "mei0", "t": "美育基础分", "max": 80.0, "d": "凡当学年参加美育素质相关培训讲座以及音乐、美术、文学、书法、朗诵等各类美育实践活动，或修读学校开设的美育课程并获取学分的，直接计 80 分；没参加、没修读、没拿学分的，该项为 0 分。", "s": "细则第六条（四）1", "hi": "0–80 分 · 达标直接计 80", "isBase": true, "doc": "zongce", "line": 104}, {"id": "mei1", "t": "美育附加分", "max": 20.0, "d": "学生积极参加各级各类美育比赛和活动（含音乐、美术、文学、书法、朗诵、学霸笔记等）并获奖的，总分不得超过 20 分。级别分值：国家级一/二/三等/优秀 = 20/18/16/10；省（市）部级 = 15/13/11/5；校级 = 10/8/6/3；院级 = 5/4/3/1。集体活动获奖减半；按名次评奖时第一、二名等同一等奖，第三、四名等同二等奖，第五至八名等同三等奖；设特等奖的按一等奖上浮 20%。", "s": "细则第六条（四）2", "hi": "累计封顶 20 分", "isBase": false, "doc": "zongce", "line": 107}]}, {"key": "lao", "name": "劳动教育", "weight": 0.05, "cap": 100, "base": 60, "addonCap": 40, "src": "细则第六条（五）", "hint": "基础分 60（达标即得）+ 附加分 40", "items": [{"id": "lao0", "t": "劳动教育基础分", "max": 60.0, "d": "凡当学年学生劳动教育实践教育时长和结构性时长均达到学校要求的，直接计 60 分；两项有一项没达到的，该项为 0 分，不默认白送。", "s": "细则第六条（五）1", "hi": "0–60 分 · 达标直接计 60", "isBase": true, "doc": "zongce", "line": 122}, {"id": "lao1", "t": "劳动教育附加分", "max": 40.0, "d": "依据学生参与社会实践、生活技能实践、公益志愿服务实践、就业能力拓展实践等情况予以计分。所在寝室荣获「卫生寝室」「五星文明寝室」「优良学风寝室」等荣誉且已纳入学生公寓区行为积分加分项的，直接将行为积分正分分值计入本项；未纳入的按级别计分：国家级一/二/三等/优秀 = 20/18/16/10；省（市）部级 = 15/13/11/5；校级 = 10/8/6/3；院级 = 5/4/3/1，集体活动获奖减半。", "s": "细则第六条（五）2", "hi": "累计不超过 40 分", "isBase": false, "doc": "zongce", "line": 124}]}, {"key": "xs", "name": "学术科技与创新创业", "weight": 0, "cap": 20, "base": 0, "addonCap": 20, "src": "细则第六条（六）", "hint": "★ 唯一「挣1分算1分」的地方：不乘权重，直接计入总分，上限20分", "items": [{"id": "xs0", "t": "学术论文（第一作者）", "max": 20.0, "d": "自然科学 A4 类以上和社会科学 A 级以上 **20 分/篇**；B1类/B级 16 分；B2类/C级 12 分；B3类/D级 8 分；C1类/E级 4 分；C2类/F级 1 分。", "s": "细则第六条（六）1", "hi": "最高 20 分/篇", "isBase": false, "doc": "zongce", "line": 140}, {"id": "xs1", "t": "决策咨询成果（第一作者）", "max": 20.0, "d": "A级以上 20 分/篇；B级 16；C级 12；D级 8；E级 4；F级 1。", "s": "细则第六条（六）2", "hi": "最高 20 分/篇", "isBase": false, "doc": "zongce", "line": 153}, {"id": "xs2", "t": "知识产权（第一完成人）", "max": 15.0, "d": "**A3 级以上发明专利 15 分/项**；B3至B1级外观设计专利、实用新型专利、集成电路布图设计专有权、植物新品种权 6 分/项；**计算机软件著作权 2 分/项**。", "s": "细则第六条（六）3", "hi": "最高 15 分/项", "isBase": false, "doc": "zongce", "line": 163}, {"id": "xs3", "t": "学科竞赛获奖", "max": 20.0, "d": "六级分值：国甲 20/16/12/2、国乙 15/12/9/1.5、国丙或省甲 10/8/6/1、省乙 8/6.4/4.8/0.8、校级 5/4/3/0.5、院级 3/2.4/1.8/0.3。详见下方学科竞赛加分表。", "s": "细则第六条（六）4", "hi": "最高 20 分/项", "isBase": false, "doc": "zongce", "line": 173}, {"id": "xs4", "t": "科研项目参与", "max": 16.0, "d": "参与自然科学 B3 级以上和社会科学 D 级以上项目 **16 分/项**；C1类/E级 8 分；C2类/F级 5 分。", "s": "细则第六条（六）5", "hi": "最高 16 分/项", "isBase": false, "doc": "zongce", "line": 204}, {"id": "xs5", "t": "创新创业训练计划 / 科研训练计划", "max": 12.0, "d": "**主持人**身份：成功立项国家级/省部级/校级分别 6/4/2 分/项；**成功结项**分别 **12/8/4 分/项**。**结项是立项的 2 倍。**", "s": "细则第六条（六）6", "hi": "结项 12 分/项", "isBase": false, "doc": "zongce", "line": 211}, {"id": "xs6", "t": "考级与认证类", "max": 5.0, "d": "英语四级 425 以上、六级 425 以上、小语种四级 60 以上、雅思 5.5 以上、托福 76 以上、GRE 296 以上、PTE 45 以上、GMAT 600 以上、计算机水平测试等达官方合格线，**加 5 分/项**，且**通过结果每学年均有效，累计不超过 15 分**。\n另：出国（境）2 周以上学习交流或国际组织实习 +2 分/项；CCFCSP 认证按全国排名加分；华为等技能认证 +2 分/项；担任「AI·云行」工作室方向负责人 +4 分/项、培训组长与朋辈辅导学长 +3 分/项、完成培训 +2 分/项。", "s": "细则第六条（六）7", "hi": "5 分/项 · 累计封顶 15 分", "isBase": false, "doc": "zongce", "line": 222}, {"id": "xs7", "t": "创新创业实践活动", "max": 2.0, "d": "参加众创空间、创业沙龙、项目路演、创业大赛等，**总分不得超过 2 分**。未获奖但成功参加的按 0.2 分/项；互联网+、挑战杯竞赛权重 2.0，其余活动权重 1.0。", "s": "细则第六条（六）8", "hi": "累计封顶 2 分", "isBase": false, "doc": "zongce", "line": 237}]}], "deductions": [{"id": "dd0", "t": "受留校察看处分", "per": 10, "unit": "次", "s": "细则第六条（一）", "kw": "（一）受留校察看处分", "line": 245, "doc": "zongce"}, {"id": "dd1", "t": "受记过处分", "per": 8, "unit": "次", "s": "细则第六条（二）", "kw": "（二）受记过处分", "line": 246, "doc": "zongce"}, {"id": "dd2", "t": "受严重警告处分", "per": 6, "unit": "次", "s": "细则第六条（三）", "kw": "（三）受严重警告处分", "line": 247, "doc": "zongce"}, {"id": "dd3", "t": "受警告处分", "per": 4, "unit": "次", "s": "细则第六条（四）", "kw": "（四）受警告处分", "line": 248, "doc": "zongce"}, {"id": "dd4", "t": "受通报批评", "per": 2, "unit": "次", "s": "细则第六条（五）", "kw": "（五）受通报批评", "line": 249, "doc": "zongce"}, {"id": "dd5", "t": "公寓区行为积分负分（按 20% 折算）", "per": 0.2, "unit": "分负分", "s": "细则第六条（六）", "kw": "（六）公寓区行为积分负分", "line": 250, "doc": "zongce"}], "docs": [{"key": "zongce", "name": "《人工智能学院本科生综合素质测评实施细则（2025 年 10 月修订版）》", "lines": ["人工智能学院本科生综合素质测评实施细则", "（2025年10月修订版）", "第一章 总则", "第一条 为全面贯彻落实党的教育方针，落实立德树人根本任务，努力培养大", "批信念坚定、志存高远、德智体美劳全面发展，具有扎实专业知识、持续发展能力、执着", "行业情怀的高素质创新型人才，根据中共中央、国务院印发的《深化新时代教育评价改", "革总体方案》等相关文件精神，根据重庆邮电大学《本科生综合素质测评办法》，结合", "我院学生实际，特制定本细则。", "第二条 学生综合素质测评是我校开展大学生思想政治教育和人才培养工", "作的重要环节，是对学生德智体美劳等各方面表现进行的综合评价。测评过程坚持“全", "面性、指导性、差异性、可行性和公平公正性”原则，按照“关注全体、尊重差异、注", "重过程、科学评价、引领成长、追求卓越”的工作要求，实现人才培养“第一课堂”", "和“第二课堂”有机融合，客观科学反映学生的综合素质发展情况。", "第三条 综合素质测评对象为我校在籍在校全日制本科生（不包含国际学生）。", "其中，转专业学生的综合素质测评在其评定学年所在学院的相应专业（或年级）", "进行；赴国（境）外交流学习学生，国（境）外学习时间不超过 3 个月的，照常参与", "综合素质测评，超过3 个月的，还需提供交流学校方的学习与表现情况鉴定。", "第四条 综合素质测评每学年进行一次，测评时间范围为上一学年度秋季", "学期开学至下一学年度秋季学期开学。测评结果作为学生每学年评定奖学金和", "授予荣誉称号的主要依据，同时可作为毕业鉴定及就业推荐的重要依据。", "第二章 测评内容与办法", "第五条 综合素质测评内容包括学生德、智、体、美、劳五个方面的综合表", "现。为体现出学校办学特色和育人目标，单设学术科技与创新创业能力附加分项。", "综 合 素 质 测 评 成 绩 = 德 育 测 评 成 绩 *10%+ 智育测评成绩*70%+体", "育测评成绩*10%+美育测评成绩*5%+劳动教育测评成绩*5%+学术科技与创新创业", "实践测评成绩－扣分。", "（一） 德育测评成绩", "德育成绩包括德育基础分和德育附加分，满分为 100 分，按10%计入综合素质", "测评成绩。如有严重违背四项基本原则的言行，或触犯国家法律法规并受到", "处罚，德育成绩记为零分。", "1.德育基础分（75分）。德育基础分由本人自评、班级学生互评和辅导员", "评议组成，主要从学生的思想政治素质、道德品质修养和安全法纪素养三个方面", "进行测评，评分标准为：", "（1）思想政治素质（25分）。拥护中国共产党的领导，忠于祖国、忠于人", "民，树立中国特色社会主义共同理想和共产主义远大理想，坚定中国特色社会主义道", "路自信、理论自信、制度自信、文化自信，具有强烈的社会责任感、集体主义观念和", "集体荣誉感，加强政治修养，积极参加各类思想政治教育学习。", "（2）道德品质修养（25分）。自觉学习和践行社会主义核心价值观，遵守", "社会公德、培养职业道德、弘扬家庭美德、提升个人品德；具有积极的人生态度和健", "康的心理状态，拼搏进取，诚实守信；学习态度端正，学习习惯良好，认真参与教育教", "学活动；热爱学校，维护学校声誉，传承和发扬重邮精神；尊敬师长，孝老敬亲，团结同", "学，待人友善；勤俭节约，珍惜资源，仪表得体，举止文明等。", "（3）安全法纪素养（25分）。遵守宪法、法律法规以及学校各项规章制度，", "自觉维护公共秩序，做到令行禁止，正确行使权利，依法依规履行义务；严守学术诚", "信，遵守考试纪律，杜绝作弊、剽窃等学术不端行为；增强安全防范意识，提高安全防", "护能力，防骗防盗，防灾减灾；依法上网、安全上网、文明上网、绿色上网。", "德育基础分的计算公式为：德育基础分= 本人自评成绩*10%+班级学生互", "评成绩*45%+辅导员评议成绩*45%。其中，本人自评成绩为学生对照德育基础", "评分标准进行自评的得分；学生互评分为 A、B、C 三个等级，分别计 75、70、", "65 分。其中，申报创建“优良学风班级”或“先进班集体”的班级，A 等级", "学生人数不超过班级人数的 30%；获评“优良学风班级”或“先进班集体”的", "班级，A 等级学生人数不超过班级人数的 40%；其他班级A 等级学生人数不超过班", "级人数的 20%。学生互评成绩=班级学生评级对应计分之和/（参与班级互评人", "数－1）；辅导员评议分为A、B、C 三个等级，分别记 75、70、65 分，A 等级学", "生人数不超过测评范围学生人数的 30%。", "2.德育附加分（25 分）", "（1）学生担任学生干部职务，可根据不同岗位类别和学年任职考核结果确", "定。其中班长、团支书、学习委员、校/院两级学生会主席团成员和部门负责人考核", "优秀的加 20 分、考核良好的加 15 分、考核合格的加 10 分、考核不合格的不予", "加分。其余学生干部参照上述加分减半。", "（2）获得国家级荣誉称号者，加 25 分；获得省部级荣誉或校长荣誉奖、五四", "之星荣誉称号者，加 15 分；获得其他校级荣誉称号者，加 10 分。", "（3）在校期间做出突出贡献，在社会上产生重大影响的学生加10-25 分。", "（4）学生参加各项集体活动，包括参加党团活动、班级活动、思想政治学", "习、志愿服务等，活动表现突出的，加分细则如下：", "①有见义勇为、拾金不昧、参加志愿献爱心、公益服务和精神文明服务等活动，", "获校级(官网、广播等)、省级部单位或者组织、国家级书面感谢或通报表扬分别+5分、", "+10分、+15分；", "②党校及团校学习并结业+5分；", "③社会实践团队获国家级、省(市)部级、校级奖励，团长和团员分别+25/20分、", "+15/10分、+8/4分。", "④若有其他先进个人加分，由学生工作办公室研究后参照执行。", "同一学年内国家级、省（市）部级、校级、院级个人评优项目同一级别只加一次", "分（校长荣誉奖和五四之星除外），但同一项目不累计加分，以最高分记。集体评优，", "其成员加分参照个人评优加分标准减半；集体评优和个人评优可累计加分。", "（二）智育测评成绩", "智育测评成绩为测评学年学生所修课程（不含再修、辅修和微专业课程）的加", "权平均分，满分为 100 分，按70%计入综合素质测评成绩。具体计算公式如下：", "智育测评成绩=∑（课程成绩*课程学分数）/∑课程学分数。", "（三）体育测评成绩", "体育成绩满分为 100 分，按10%计入综合素质测评成绩。主要包括学生《国家学", "生体质健康标准》测试成绩、学生大学体育课成绩和学生身心健康活动评价成绩三", "个方面，评分标准为：", "1.学生《国家学生体质健康标准》测试成绩（40分）。优秀得40分、良好", "得32分、及格得24分、不及格得0分。", "2.学生大学体育课成绩（40分）。大一和大二年级按当学年两学期大学体", "育课平均成绩的40%计分；大三和大四年级按当学年完成学校规定的阳光体育打卡", "任务要求计分，达标直接计40分，不达标得0分。", "3.身心健康活动评价成绩（20分）。学生积极参与各级体育比赛、体育类", "社团、早操、课外体育活动和心理素质教育活动或获奖的，总分不得超过20分。", "加分细则如下：", "赛事级别 加分分值", "国家级赛事（一/二/三等奖/优秀奖） 20/18/16/10", "省（市）部级赛事（一/二/三等奖/优秀奖） 15/13/11/5", "校级赛事（一/二/三等奖/优秀奖） 10/8/6/3", "院级赛事（一/二/三等奖/优秀奖） 5/4/3/1", "积极参加早操、晨读出勤率（100%/98%/95%/90%） 10/8/6/3", "集体活动获奖加分参照个人获奖加分标准减半。其中如竞赛以名次评奖，", "则第一、二名等同于一等奖，第三、四名等同于二等奖，第五至八名等同于三", "等奖进行奖励。参加的竞赛如设立了特等奖，按照一等奖上浮 20% 加分。", "（四）美育测评成绩", "美育成绩包括美育基础分和美育附加分，满分为 100 分，按 5% 计入综合素", "质测评成绩。主要从学生认识美、爱好美和创造美的能力方面进行测评，评分", "标准为：", "1.美育基础分（80分）。凡当学年参加美育素质相关培训讲座以及音乐、美", "术、文学、书法、朗诵等各类美育实践活动或修读学校开设的美育课程并获取学分", "的，直接计 80 分。", "2.美育附加分（20分）。学生积极参加各级各类美育比赛和活动（含音乐、", "美术、文学、书法、朗诵、学霸笔记等）并获奖的，总分不得超过 20 分。加分细则", "如下：", "赛事级别 加分分值", "国家级赛事（一/二/三等奖/优秀奖） 20/18/16/10", "省（市）部级赛事（一/二/三等奖/优秀奖） 15/13/11/5", "校级赛事（一/二/三等奖/优秀奖） 10/8/6/3", "院级赛事（一/二/三等奖/优秀奖） 5/4/3/1", "集体活动获奖加分参照个人获奖加分标准减半。其中如竞赛以名次评奖，", "则第一、二名等同于一等奖，第三、四名等同于二等奖，第五至八名等同于三", "等奖进行奖励。参加的竞赛如设立了特等奖，按照一等奖上浮 20% 加分。", "（五）劳动教育测评成绩", "劳动教育成绩包括劳动教育基础分和劳动教育附加分，满分为100 分，按5%", "计入综合素质测评成绩。主要从学生的劳动观念、劳动精神、劳动实践等方面", "进行测评，评分标准为：", "1.劳动教育基础分（60分）。凡当学年学生劳动教育实践教育时长和结构", "性时长均达到学校要求的，直接计 60 分。", "2.劳动教育附加分（40分）。依据学生参与社会实践、生活技能实践、公益志", "愿服务实践、就业能力拓展实践等情况予以计分。其中，学生所在寝室荣获“卫生寝室”", "“五星文明寝室”“优良学风寝室”等各级各类荣誉且已纳入学生公寓区行为积分加分", "项的，直接将行为积分正分分值计入本项；未纳入行为积分加分项的，加分细则如下：", "赛事级别 加分分值", "国家级赛事（一/二/三等奖/优秀奖） 20/18/16/10", "省（市）部级赛事（一/二/三等奖/优秀奖） 15/13/11/5", "校级赛事（一/二/三等奖/优秀奖） 10/8/6/3", "院级赛事（一/二/三等奖/优秀奖） 5/4/3/1", "集体活动获奖加分参照个人获奖加分标准减半。其中如竞赛以名次评奖，", "则第一、二名等同于一等奖，第三、四名等同于二等奖，第五至八名等同于三", "等奖进行奖励。参加的竞赛如设立了特等奖，按照一等奖上浮 20% 加分。", "（六）学术科技与创新创业实践测评成绩", "学术科技与创新创业实践成绩按项目加分进行计算，上限为 20 分，直接计", "入综合素质测评成绩总分，主要依据学生参与科学研究、学科竞赛和创新创业活", "动等方面的情况予以计分，测评的参考标准为：", "1.学生在当学年以第一作者身份发表学术论文的，按以下标准计分：", "（1）自然科学A4 类以上和社会科学A 级以上为20 分/篇；", "（2）自然科学 B1 类和社会科学 B 级为16 分/篇；", "（3）自然科学 B2 类和社会科学 C 级为12 分/篇；", "（4）自然科学 B3 类和社会科学 D 级为8 分/篇；", "（5）自然科学 C1 类和社会科学 E 级为4 分/篇；", "（6）自然科学 C2 类和社会科学 F 级为1 分/篇。", "注：①学生以非第一作者身份发表学术论文的，按以下权重加分：0.5（第二", "作者）或 0.3（第三作者），第四作者及其以后不加分。学术论文认定等级参照附", "件2《学术论文认定等级划分目录》。", "②被列入中国科学院发布的《国际期刊预警名单》中的学术论文，不予认定。", "③学生发表学术论文的审定以期刊封面、完整目录页、论文正文全文复印件等", "材料为依据。", "2.学生在当学年以第一作者身份获决策咨询成果的，按以下标准计分：", "（1）A 级以上成果为 20 分/篇；", "（2）B 级成果为 16 分/篇；", "（3）C 级成果为 12 分/篇；", "（4）D 级成果为 8 分/篇；", "（5）E 级成果为 4 分/篇；", "（6）F 级成果为 1 分/篇。", "学生以非第一作者身份获决策咨询成果的，按以下权重加分：0.5（第二作者）", "或 0.3（第三作者），第四作者及其以后不加分。", "学生获决策咨询成果的审定以学校成果认定证明等材料为依据。", "3.学生在当学年以第一完成人身份获得知识产权成果（含发明专利、外观设", "计专利、实用新型专利、集成电路布图设计专有权、植物新品种权等）的，按以下", "标准计分：", "（1）A3 级以上发明专利为 15 分/项；", "（2）B3 至B1 级外观设计专利、实用新型专利、集成电路布图设计专有权、", "植物新品种权为 6 分/项；", "（3）获得计算机软件著作权的为 2 分/项。", "学生以非第一完成人身份获得知识产权成果的，按以下权重加分：0.5（第二", "作者）或 0.3（第三作者），第四作者及其以后不加分。", "学生获得知识产权成果的审定以成果证书等材料为依据。", "4.学生在当学年以第一完成人身份在学科竞赛中获得奖项的，按以下标准", "计分：", "（1）学生获得国甲类竞赛最高奖/第一名加 20 分/项，次高奖/第二至三名", "按竞赛级别加 16 分/项，再次高奖/第四名至八名按竞赛级别加 12 分/项，成", "功参赛奖、优胜奖等加 2 分/项；", "（2）学生获得国乙类竞赛最高奖/第一名加 15 分/项，次高奖/第二至三名", "按竞赛级别加 12 分/项，再次高奖/第四名至八名按竞赛级别加 9 分/项，成功", "参赛奖、优胜奖等加 1.5 分/ 项；", "（3）学生获得国丙类或省甲类竞赛最高奖/第一名加 10 分/项，次高奖/", "第二至三名按竞赛级别加 8 分/项，再次高奖/ 第四名至八名按竞赛级别加 6", "分/项，成功参赛奖、优胜奖等加 1 分/项；", "（4）学生获得省乙类竞赛最高奖/第一名加 8 分/项，次高奖/第二至三名", "按竞赛级别加 6.4 分/项，再次高奖/第四名至八名按竞赛级别加 4.8 分/项，", "成功参赛奖、优胜奖等加0.8分/项；", "（5）学生获得校级竞赛最高奖/第一名加 5 分/项，次高奖/第二至三名", "按竞赛级别加 4 分/项，再次高奖/第四名至八名按竞赛级别加 3 分/项，成", "功参赛奖、优胜奖等加 0.5 分/项；", "（6）学生获得院级竞赛最高奖/第一名加 3 分/项，次高奖/第二至三名按竞", "赛级别加 2.4 分/项，再次高奖/第四名至八名按竞赛级别加 1.8 分/项，成功", "参赛奖、优胜奖等加0.3分/项。", "（7）学生参与竞赛获奖，竞赛名称未在附件4《常见竞赛目录》中，但属", "附件3《人工智能学院推荐学科竞赛列表》中的，参照以下标准加分：", "赛事级别 加分分值", "A1类学科竞赛 参照国甲/省甲类竞赛", "A2/B类学科竞赛 参照国乙/省乙类竞赛", "注：①学生参加不区分完成人位次的学科竞赛获奖的，按上述标准计分。", "②学生以非第一完成人身份参加区分完成人位次的学科竞赛获奖的，加分", "细则如下，学术竞赛中同一个获奖认定人数不超过 8 人（按获奖证书排序取前", "8 人）；学术竞赛中有排名顺序的团队竞赛获奖，其加分规则为：个人加分=", "奖项对应分值/[1+（排序-1）*0.5]；同一个竞赛取最高分计入，不重复加分。", "③学生获得学科竞赛奖项的审定以获奖证书、授奖文件等材料为依据。", "5.学生在当学年参与各级各类科研项目的，按以下标准计分：", "（1）学生参与自然科学 B3 级以上和社会科学 D 级以上项目的为16 分/项；", "（2）学生参与自然科学 C1 级和社会科学 E 级项目的为 8分/项；", "（3）学生参与自然科学 C2 级和社会科学 F 级项目的为 5分/项。", "学生参与各级各类科研项目的审定以项目申报书或结项书等材料为依据。", "学生以非第一完成人身份参与科研项目的，按以下权重加分：0.5（第二作者）", "或 0.3（第三作者），第四作者及其以后不加分。", "6.学生在当学年以主持人身份成功立项或结项创新创业训练计划项目/", "大学生科研训练计划项目的，按以下标准计分：", "（1）成功立项国家级、省部级、校级创新创业训练计划项目/大学生科研训", "练计划项目的分别为 6 分/项、4 分/项、2 分/项；", "（2）成功结项国家级、省部级、校级创新创业训练计划项目/大学生科研", "训练计划项目的分别为 12 分/项、8 分/项、4 分/ 项。", "学生以非主持人身份参与立项或结项的创新创业训练计划项目/大学生科", "研训练计划项目，按以下权重加分：0.5（第二作者）或 0.3（第三作者），第四", "作者及其以后不加分。", "学生主持（参与）创新创业训练计划项目/大学生科研训练 计划项目的审", "定以项目申报书和结项书等材料为依据。", "7.学生参与考级、认证类活动并通过的，按以下标准计分：", "（1）学生英语四级成绩 425 以上、英语六级成绩 425 分以上、小语种四", "级考试成绩 60 分以上、雅思成绩 5.5 以上、托福成绩 76 分以上、GRE 成绩", "296 分以上、PTE 成绩 45 分以上、国际人才英语成绩中级优秀以上、GMAT 成", "绩 600 分以上、计算机水平测试、专业外语水平测试成绩等达到官方公布的合", "格分数线的，加5分/项，且通过结果每学年均有效，总分不得超过 15 分。", "（2）出国（境）为期 2 周以上学习交流或国际组织实习+2 分/项;", "（3）参加 CCF CSP 认证，若当次全国排名在前30%之内，其成绩按照（1-CSP", "认证当次全国排名百分比）*10 进行加分;", "（4）参加华为等公司技能认证考试并通过或获劳动技术鉴定部门颁发或行业", "认定的各类专业技能资格证书+2 分/项;", "（5）担任“AI•云行”工作室方向负责人并考核合格+4 分/项；担任“AI•云", "行”工作室培训组长和“AI朋辈辅导”学业辅导学长并考核合格+3 分/项；完成“AI", "•云行”工作室相关培训并考核合格+2 分/项。", "学生参与考级、认证类活动并通过的审定以证书、成绩单等材料为依据。", "8.学生积极参加众创空间、创业沙龙、项目路演、创业大赛等创新创业实践", "活动的，加分总分不得超过2分。加分细则如下：成功参加互联网+、挑战杯、众创", "空间、创业沙龙、项目路演等各类学术科技与创新创业实践活动，但未获奖，按照 0.2", "分/项加分。互联网+、挑战杯竞赛权重为2.0，其余活动权重为 1.0。", "以上学术论文、知识产权成果、竞赛获奖、科研项目等级别参照学校科研成果", "和本科生学科竞赛认定相关文件最新标准执行。", "第六条 有下列情况的，直接作为扣分项从综合素质测评成绩总分中扣除相应分", "值（导致德育测评分直接为零分的情况不在此处作为扣分项重复扣除）：", "（一）受留校察看处分，扣 10 分/次；", "（二）受记过处分，扣 8 分/次；", "（三）受严重警告处分，扣 6 分/次；", "（四）受警告处分，扣 4 分/次；", "（五）受通报批评，扣 2 分/次；", "（六）公寓区行为积分负分按 20%折算后予以扣分。", "第三章 组织与实施", "第七条 学生综合素质测评工作由学工部/学生处牵头组织，信息中心/信", "息化办、教务处、校团委、创新创业教育学院、科技处、社科处、体育学院", "等单位协助开展。其中，学工部/学生处负责学生综合素质测评系统的建设与维", "护，以及劳动教育有关数据的提供等；信息中心/信息化办负责数据编目归集", "及数据对接等；教务处负责提供学生智育成绩数据和学生相关竞赛获奖数据等；校团", "委负责提供学生志愿服务、美育教育以及部分学生竞赛等有关数据；创新创业教育学院", "负责提供学生参与创新创业实践的相关数据等；科技处负责提供学生参加科研工作（自", "然科学类）的相关数据；社科处负责提供学生参加科研工作（社会科学类）的相关", "数据；体育学院负责提供学生《国家学生体质健康标准》测试成绩和阳光体育打卡", "成绩的相关数据；学院负责审核学生提供的数据材料，组织完成德育测评中学生互评", "和辅导员评议等。", "第八条 学院依据学校颁布办法结合学院专业特点及学生实际，制定学院", "学生综合素质测评实施细则，并报学工部/学生处审查备案。", "第九条 学院成立由学院分管本科学生工作领导任组长、各专业年级辅导", "员为成员的学院学生综合素质测评工作领导小组，全面负责学院学生的综合素质", "测评工作。各辅导员具体负责所带学生的综合素质测评，成立由辅导员任组长、班导师", "或其他任课教师代表以及学生代表为成员的专业年级综合素质测评工作小组，开", "展材料审核和初评工作。其中，学生代表人数占比不少于综合素质测评工作小组总", "人数的 30%。", "第十条 学院学生综合素质测评工作领导小组向全院学生公示综合素质测评成", "绩，公示期为 3 个工作日。经公示无异议后，学院学生综合素质测评工作领导小组进", "行审定，并将学生综合素质测评最终结果及时提交学工部/学生处备案。", "第十一条 凡在学生综合素质测评中弄虚作假者，一经查实，扣除其全部加分", "和取消其评定学年内评奖评优资格，并按照《重庆邮电大学学生违纪处分实施办法》", "相关规定给予处理。", "第十二条 德育测评分低于 60 分者，或有第六条描述的情形之一者，取消", "评定学年评优评奖资格。", "第四章 结果运用", "第十三条 学生综合素质测评的结果，主要用于评定各类奖助学金、各类", "荣誉称号，作为学生毕业鉴定、就业推荐等工作的重要依据。", "第十四条 德育测评分低于 60 分者，或有受通报批评及其以上处分的情", "形之一者，取消评定学年评优评奖和推优入党资格。", "第五章 附则", "第十三条 本办法所称“以上”，均包含本数。", "第十四条 集体参赛获奖加分按相应级别个人获奖加分标准减半的原则计分；同", "一事项加减分按就高不就低的原则计分。", "第十五条 本细则中所有加分涉及内容均需学生在读期间以学校为第一单位", "参与。", "第十六条 本细则由人工智能学院承担具体解释工作。", "第十七条 本细则自 2025 年 9 月 1 日起施行。", "参照附件", "附件1：科研项目认定等级划分目录", "附件2：学术论文认定等级划分目录", "附件3：人工智能学院推荐学科竞赛列表", "附件4：常见比赛目录收录", "附件1：", "科研项目认定等级划分目录", "类别 等级 项目类别", "自", "科", "类", "科", "研", "项", "目", "等", "级", "A1", "我校牵头的国家自然科学基金（重大项目、杰出青年基金、重点", "仪器研发项目等）、牵头且财政经费 1000 万元及以上的纵", "向项目（课题）、获得科研经费 1200 万元及以上（不含外拨）", "的横向项目。", "A2", "我校牵头的国家自然科学基金（重点基金、优秀青年基金等）、牵头", "且财政经费 500 万元及以上的纵向项目（课题）、获得科", "研经费 600 万元及以上（不含外拨）的横向项目", "A3 我校牵头且财政经费 250 万元及以上的纵向项目（课题）、", "获得科研经费 300 万元及以上（不含外拨）的横向项目", "B1", "我校承担的财政经费 100 万元及以上的国家级项目（课题）、", "牵头承担的科研经费 120 万元及以上的纵向项目（课题）、", "获得科研经费 150 万元及以上（不含外拨）的横向项目", "B2", "我校承担的财政经费 50 万元及以上的国家级项目（课题）、牵头", "承担的国家自然科学基金面上项目、牵头承担的财政经费 80 万元", "及以上的纵向项目、获得科研经费 100 万元及以上（不", "含外拨）的横向项目", "B3", "我校牵头或承担财政经费20 万元及以上的国家级项目（课题）、", "承担的财政经费 30 万元及以上（不含外拨）的纵向项目（课", "题）、获得科研经费 50 万元及以上（不含外拨）的横向项目", "C1", "牵头承担的省部级纵向项目（课题）、我校承担的财政经费 20", "万元及以上（（不含外拨）的纵向项目（课题）、获得科研经费", "30 万元及以上（不含外拨）的横向项目", "C2 其他科研项目（课题）:校级以上/校级（含平台、科研启动经费等）", "社", "科", "类", "科", "研", "项", "目", "等", "级", "T", "全国哲学社会科学规划办立项资助的国家社会科学基金重大项", "目；国家文化工程重大项目；教育部哲学社会科学基础研究中长", "期重大专项；教育部哲学社会科学研究重大课题攻关项目。合同", "经费在 80 万元及以上的单个 B 级及以上的项目。", "A", "全国哲学社会科学规划办立项资助的国家社科基金重点项目；合", "同经费在 60 万元及其以上的单个 B 级项目。到校经费累计", "200 万及以上（不含外拨）的单个 E 级项目。", "B", "全国哲学社会科学规划办立项资助的国家社科基金项目（含教育学、艺", "术学、军事学邓单列学科）；教育部哲学社会科学研究后期资助重大项目；", "到校经费 20 万元及以上且单独建账的T 级项目一级子课题；合同经费", "在 40 万元及以上的单个C 级项目，到校经费累计 100 万到200 万", "（不含外拨）的单个E 级项目。", "C", "教育部及中央其他部委立项资助的社会科学规划项目；重庆市社科", "规划年度重大、重点项目；其他省（自治区、直辖市）社科规划年", "度重大、重点项目；到校经费 10 万元及以上且单独建 账 的 T 级", "项目一级子课题；合同经费在 20 万元及以上的单个D 级项目，到", "校经费累计 40 万到 100 万（不含外拨）的单", "个 E 级项目。", "D", "重庆市委宣传部、重庆市社科规划办、重庆市政府发展研究中心、", "重庆市科技局、重庆市教委、重庆市教育科学规划办等发布的社会科", "学研究纵向项目；其他省部级一般项目；到校经费5 万元及以上且", "单独建账的 T 级项目一级子课题；到校经费累", "计 20 万到 40 万（不含外拨）的单个 E 级项目", "E 厅局级项目、未包含在以上等级的其他纵向项目、单独建账的横", "向项目。", "F 学校资助的人文社会科学研究项目（含学校筹建的省部级以上重", "点研究基地，省部级智库平台的招标项目）。", "附件2：", "学术论文认定等级划分目录", "类别 等级 项目类别", "自", "科", "类", "学", "术", "论", "文", "等", "级", "A1 Nature、Science、Cell、PNAS 等刊物的正刊", "A2 Nature、Science、Cell 等刊物的子刊、ESI 热点论文、国内权威期", "刊 T 类期刊", "A3 ESI 高被引论文、SCI 一区 TOP", "A4 SCI 一区、SCI 二区 TOP 期刊、CCF A 类会议论文", "B1 其他 SCI 二区、国内权威期刊 I 类", "B2 SCI 三区、国内权威期刊 II 类", "B3 SCI 四区、EI 收录的期刊、CCF B 类会议论文", "C1 CSCD 收录、北大中文核心期刊", "C2 其他公开发表的期刊论文、CCF C 类会议论文/其他会议论文", "社", "科", "类", "科", "研", "项", "目", "等", "级", "国内期刊", "T 在《中国社会科学》《求是》上发表的学术论文", "A A 类权威期刊论文；被《新华文摘》长文转载的学术论文", "B", "B 类权威期刊论文；《新华文摘》论点摘编的学术论文；被", "《中国人民大学报刊复印资料》（长文）《中国社会科学文摘》", "《高等学校文科学术文摘》", "C CSSCI 来源期刊，被《中国社会科学文摘》《高等学校文", "科学术文摘》论点摘编的学术论文", "D CSSCI 扩展版期刊发表的学术论文", "E 《北大中文核心期刊要目总览》期刊发表的学术论文", "F 其他公开发表论文", "国外期刊", "A SSCI 一区期刊论文", "B SSCI 二区期刊论文；被A&HCI 收录的学术论文", "C SSCI 三区期刊论文", "D SSCI 四区期刊论文", "E SSCI 未分区期刊论文；在国际学术会议上公开宣读并被", "ISSHP 收录的学术论文", "F 其他公开发表论文", "报纸理论文", "章", "A", "人民日报理论版、光明日报理论版、经济日报理论版上发表的", "1500 字以上的理论文章；中国教育报理论版上发表的 3000 字的", "理论特稿", "B 人民日报、光明日报、经济日报上发表的 1500 字以上的理", "论文章；省级党报理论版上发表的 1500 字以上的理论文章", "C 学习时报理论版、中国社会科学报理论版上发表的 1500 字以", "上的理论文章", "附件3：", "人工智能学院推荐学科竞赛列表", "（2026年）", "表1、人工智能学院A1类学科竞赛", "序号 竞赛名称", "1 中国国际大学生创新大赛", "2 “挑战杯”全国大学生课外学术科技作品竞赛和中国大学生创业计划竞赛", "表2、人工智能学院A2类学科竞赛", "序号 竞赛名称", "1 CCF推荐A类国际学术会议举办的竞赛", "2 国际大学生程序设计竞赛(ICPC)", "3 中国高校计算机大赛-大数据挑战赛", "4 华为软件精英挑战赛", "5 全国大学生机器人大赛（CURC）", "6 全国大学生电子设计竞赛", "表3、人工智能学院B类学科竞赛", "序号 竞赛名称", "1 CCF推荐B类国际学术会议举办的竞赛", "2 Kaggle平台举办的竞赛", "3 中国大学生计算机设计大赛", "4 全国大学生数学建模竞赛", "5 中国高校智能机器人创意大赛", "6 中国高校计算机大赛-移动应用创新赛", "7 中国高校计算机大赛-网络技术挑战赛", "8 中国高校计算机大赛-团体程序设计天梯赛", "9 中国机器人及人工智能大赛", "10 全国大学生信息安全竞赛", "11 CCF大学生计算机系统与程序设计竞赛（CCSP）", "12 CCF大数据与计算智能大赛（BDCI）", "13 3S杯全国大学生物联网技术与应用“三创”大赛", "14 全国大学生GIS应用技能大赛", "15 全国大学生智能汽车竞赛", "16 全国大学生电子商务“创新、创意及创业”挑战赛", "17 “外研社·国才杯”“理解当代中国”全国大学生外语 能力大赛-英语演讲、英语", "辩论、英语写作、英语阅读", "18 全国大学生创新创业训练计划年会展示", "19 中国大学生工程实践与创新能力大赛", "20 中国机器人大赛暨RoboCup机器人世界杯中国赛", "21 “西门子杯”中国智能制造挑战赛", "22 中国大学生服务外包创新创业大赛", "23 睿抗机器人开发者大赛（RAICOM）", "24 全国大学生嵌入式芯片与系统设计竞赛", "25 全国大学生数字媒体科技作品及创意竞赛", "26 全球人工智能技术创新大赛", "27 iCAN 大学生创新创业大赛", "28 华为ICT大赛", "29 百度之星.程序设计大赛", "30 全国大学生计算机系统能力大赛", "31 全球校园人工智能算法精英大赛", "32 高校ICT产教融合创新大赛", "人工智能学院C类学科竞赛：", "学校教务处认定的国乙、国丙、省甲类竞赛。", "其他说明：", "1.国际大学生程序设计竞赛(ICPC)亚洲区域赛及其以上等级赛事获奖：金牌认定为全国一等奖；银牌认", "定为全国二等奖；铜牌认定为全国三等奖。", "2.华为软件精英挑战赛获奖：成渝赛区复赛前4强认定为省（市）级一等奖；成渝赛区复赛前32强认定", "为省（市）级二等奖；成渝赛区初赛前64强认定为省（市）级三等奖。", "3.中国高校计算机大赛-团体程序设计天梯赛只认定个人奖 项为B类学科竞赛获奖，团队奖项认定为C", "类学科竞赛获奖。", "4. CCF 推荐A/B类国际学术会议举办的竞赛获奖：赛事（赛道）第一名认定为全国一等奖；赛事（赛", "道）第二名认定为全国二等奖；赛事（赛道）第三名认定为全国三等奖。", "5. Kaggle 平台举办的竞赛获奖：只认定颁发AwardsPoints&Medals 的赛事，其中金牌认定为全国一等", "奖；银牌认定为全国二等奖；其余奖项不予认定。团队参赛成员获奖排名顺序以获奖赛事 Leaderboard 公布", "团队成员排名顺序为准。", "6. 本列表从2026年1月1日起实施。未尽事宜，由人工智能学院负责解释。"]}, {"key": "tuimian", "name": "《推荐优秀应届本科毕业生免试攻读研究生实施办法》（重邮人工智能〔2025〕18 号）", "lines": ["", "", "", "", "", "", "", "", "", "", "重邮人工智能〔2025〕18 号", "", "重庆邮电大学人工智能学院关于印发", "《推荐优秀应届本科毕业生免试攻读研究生", "实施办法》的通知", "", "院属各部门：", "现将《推荐优秀应届本科毕业生免试攻读研究生实施办法》", "印发你们，请遵照执行。", "", "人工智能学院", "2025 年 11 月 5 日", "", "", "", "人工智能学院推荐优秀应届本科毕业生免试", "攻读研究生实施办法", "第一章  总则", "第一条 为促进我院推荐优秀应届本科毕业生免试攻读硕士", "学位 （以下简称推免） 相关工作的健康发展， 激励本科学生勤奋", "学习、 积极创新和全面发展， 根据重庆邮电大学 《推荐优秀应届", "本科毕业生免试攻读研究生实施办法 （修订） 》 （重邮 〔2025〕303", "号）的精神，结合我院实际，特制定本实施细则。", "第二条 本办法所称免试，是指学校普通本科招生计划录取", "的优秀应届毕业生 （不含专升本、 第二学士学位学生） 不必经过", "全国硕士研究生入学统一考试的初试，直接进入复试。", "第三条 推免工作坚持德智体美劳全面发展原则，通过对学", "生思想政治、 道德品质、 学习成绩、科研创新能力和素质拓展情", "况的全面考察，综合评价、择优推荐。", "第四条 坚持公平、公正、公开推荐，接受广大师生和纪检", "监察部门的监督。", "第二章  组织机构及职责分工", "第五条 学院成立推免工作小组，学院院长和书记任组长，", "分管本科教学、 研究生教学和学生工作的院领导任副组长， 其他", "相关负责人以及专家教授代表为成员， 学院本科学生学籍秘书为", "工作小组秘书， 负责制定本学院实施细则， 并组织实施学院推免", "", "工作。", "第六条 学院成立专家审核小组，负责对申请推免资格学生", "的科研创新成果、 论文、 竞赛获奖级别及内容进行审核鉴定。 学", "院专家审核小组成员应具有相关学科副高及以上职称， 成员人数", "为单数，一般不少于 5 人。", "第七条 学院党委纪检委员负责监督推免生推荐工作。", "第三章  推荐条件", "第八条 推免包括普通推免、研究生支教团专项推免两类。", "第九条 推免基本条件", "（一） 拥护中国共产党的领导， 拥护社会主义制度， 自觉践", "行社会主义核心价值观， 具有高尚的爱国主义情操和集体主义精", "神， 具有强烈的社会责任感、 集体主义观念和集体荣誉感， 遵纪", "守法，积极向上。", "（二）信念坚定，志存高远，品行优良，诚实守信，学风端", "正， 德智体美劳全面发展。 遵守学术道德和学术规范， 无任何违", "法违纪处分、考试作弊和学术不端行为。", "（三）勤奋学习，成绩优秀，学术研究兴趣浓厚，具有扎实", "的专业技术基础、 较强的创新意识和创新能力。 完成培养方案规", "定的本专业前三学年开设的全部必修课程以及指定选修课程学", "习，修读的所有课程均为一次性通过。", "第十条 推免学业条件", "（一）普通推免须满足以下学业条件：", "", "1. 前三学年开设的全部必修课程以及指定选修课程学分绩", "点位于本专业排名前 50%。所修课程无取消考试资格、不及格、", "缺考、补考或重修记录。", "2. 非外语类专业第一外语为英语的学生 CET4 成绩达到 425", "分及以上，或 TOEFL 成绩达到 80 分及以上，或 IELTS 成绩达", "到 6 分及以上； 第一外语为非英语的学生参加相应语种的等级考", "试或同等权威考试，成绩达到学校认定标准。", "休学期间参加的 CET4、CET6 考试、专业外语考试获得的", "成绩不作为推免的外语水平依据。", "3. 身心健康达到研究生入学健康标准要求。", "大学生国家学生体质健康标准测试成绩前三年平均成绩达", "60 分及以上（经核准，免予执行《国家学生体质健康标准》的", "学生除外） 。 （本条款自2025 级本科生开始执行）", "（二） 研究生支教团专项推免的学生学业条件根据学校相关", "办法执行。", "第四章  推免要求及程序", "第十一条 坚持科学遴选，突出考察学生 的一贯学业表现，", "引导学生全面发展。 普通推免以学业成绩为基础， 实施附加分制", "度，综合评价学生德智体美劳各方面的表现。", "第十二条 普通推免生的综合测评成绩 =必修课平均学分绩", "点×25×0.75+附加分×0.25。", "（一） 学生必修课平均学分绩点按第一次通过成绩统计， 缓", "", "考成绩按正考成绩计算。因转专业、休学、参军入伍、交换学习", "等原因需要申请课程替代的， 经学生申请、 学院审核认定后计入", "学业成绩计算。", "（二）学生在读期间以学校为第一单位参加的学科竞赛获", "奖、文艺和体育类获奖、科研成果、参军入伍服兵役、参加社会", "工作和志愿服务、 赴国际组织实习等符合全面发展价值导向等活", "动取得的成绩， 按附件 《重庆邮电大学人工智能学院推免生附加", "分认定及计分细则》 计算附加分。 附加分上限值为100 分， 超过", "100 分按 100 分计。", "第十三条 普通推免的流程如下：", "（一） 发布通知。 学校根据当年教育部推免工作安排， 发布", "推免工作通知。", "（二） 学生自愿申请。 符合推免条件的学生向学院推免工作", "小组提交申请材料。", "（三） 材料审核与综合测评成绩计算。 教务处提供学生学业", "成绩基础数据， 学院对学生提交的申请表及各类材料进行审核鉴", "定并确定计分，在学院官网对申请学生的推荐类型、学分绩点、", "附加分、 综合测评成绩排名等进行公示， 并报学校推免工作领导", "小组办公室备案。", "（四） 学院形成拟推免名单。 学院严格审核学生的推免资格，", "普通推免按照综合测评成绩由高到低的原则， 确定本学院拟推免", "名单， 在学院官网上公示。 之后， 将拟推免名单经学院党政联席", "", "会议审议、 推免工作小组组长签字、 学院盖章后， 报学校推免工", "作领导小组办公室。", "（五） 学校公示拟推免名单。 经学校推免工作领导小组审定，", "产生全校拟推免名单， 在校园网上进行不少于7 天的公示， 接受", "师生监督。", "（六） 完成其他推免工作。 教务处将推免办法及推免正式名", "单上报教育部相关系统审核备案。 具备推免资格的学生， 通过 “全", "国推免服务系统” （http://yz.chsi.com.cn/tm）完成后续推免工作。", "第十四条 研究生支教团专项推免流程按学校相关办法和通", "知要求执行。", "第十五条 有下列情形之一的，取消推免资格：", "（一）受到法律、行政处罚或学校纪律处分的；", "（二） 后续必修课程考试有一门低于 70 分 （或等级成绩低", "于 C+） ，或有任意一门课程补考的；", "（三）毕业设计（论文）成绩未获得良好及以上的；", "（四）本科毕业时未取得学士学位的；", "（五）签订就业协议或参加研究生入学考试的；", "（六）本科毕业后赴境外留学的；", "（七）在申请过程中弄虚作假的。", "第五章  推免名额分配", "第十六条 学院推免名额按以下方式确定和分配：", "（一） 学院普通推免名额按照申请人综合测评成绩排名， 各", "", "专业、数据科学与大数据技术+经济学联合培养项目班申请人中", "综合成绩排名第一且在本专业或者本项目学习时间满两年的， 成", "为自然保研候选人， 剩余推免生候选人名额根据全年级其余申请", "学生（不分专业，含数据科学与大数据技术+经济学联合培养项", "目班） 按照综合测评成绩排序由高到低产生。 其他未说明的内容", "以学校最新颁布的实施办法为准。", "（二） 研究生支教团专项推免名额根据上级当年下达的专项", "计划确定。", "第六章  附则", "第十七条 在部队荣立二等功及以上者，按照教育部相关规", "定执行。", "第十八条 本硕博贯通培养拔尖创新人才推免和工程硕博士", "培养改革专项推免由研工部 /研究生院根据上级要求和学校相关", "办法组织实施。", "第十九条 本细则中与上级相关文件和通知要求不符的，以", "上级文件和通知要求为准。", "第二十条 本办法由人工智能学院承担具体解释工作。", "第二十一条 本办法自颁布之日起施行。", "", "附件：重庆邮电大学人工智能学院推免生附加分认定及计分细则", "", "附件", "重庆邮电大学人工智能学院推免生附加分", "认定及计分细则", "一、认定范围和要求", "将学生学科竞赛获奖、 科研成果、 文艺和体育类获奖、 创业", "孵化、 参军入伍服兵役、 参加社会工作和志愿服务、 到国际组织", "实习、 国家学生体质健康标准测试成绩等符合全面发展价值导向", "的因素纳入附加分认定。具体要求如下：", "1. 学科竞赛获奖限于学生作为主力成员参加与学业相关", "的，在国际国内具有较大影响力的学科竞赛。", "2. 科研成果原则上仅限学生本科阶段与自己的专业领域相", "关在重要期刊或会议上以独立作者或第一作者发表的科研论文，", "或以第一作者撰写的决策咨询类成果， 或以第一发明人获得的国", "家发明专利。", "3. 文艺类竞赛获奖限于学生单项或作为主力 成员参加由省", "级政府、党群机关的委（局）及以上主办的文艺类竞赛。体育类", "竞赛指学校组织或审批同意， 以重庆邮电大学或重庆市教育委员", "会或重庆市体育局署名的市级、省部级和国家级比赛。", "4. 创业孵化类认定中， 以创办企业申请加分的， 须达到 《统", "计上大中小微型企业划分办法》 规定小型企业的从业人员和营业", "收入指标的下限； 以创业奖补申请加分的， 须取得不低于1 万元", "", "的省部级及以上各类竞争性创业奖补资金。 以上两项创业孵化类", "加分，须提供相应的证明材料，由创新创业教育学院 /继续教育", "学院组织审核和认定。", "5. 本科阶段应征参军入伍，服役期间思想、工作等各方面", "表现良好， 未受任何处分， 圆满履行兵役义务， 并获学校保卫部", "/武装部/保卫处认定。", "6. 社会工作获奖限于参加由学校及以上单位、部门组织的", "社会活动， 做出突出贡献， 并获得省部级及以上政府、 党群系统", "表彰或获得二等奖及以上。 参加志愿服务指学校或上级机关组织", "的、达到规定时长的志愿服务活动，并经校团委认定。", "7. 国际组织实习指学生受国际组织正式邀请且按要求完成", "实习工作，并获得校国际处/港澳台办认定。分如下两种情形：", "A 类： 赴主要的政府间国际组织、 全球性国际组织和具有重", "要影响力的非政府间国际组织实习， 实习地点包括海外的国际组", "织总部，总部外机构办事处及国际组织驻中国（包含港澳地区）", "机构办事处等，实习时长为 3 个月及以上，2 年以内；", "B 类： 赴除A 类外其他国际组织实习， 实习地点包括海外的", "国际组织总部， 总部外机构办事处及国际组织驻中国 （包含港澳", "地区）机构办事处等，实习时长为 1 个月及以上，3 个月以内。", "8. 其他达到或高于上述价值的成果，需经院学术分委员会", "认定方可计分。", "二、认定原则", "", "1. 学生获得的各类成果、参加国际组织实习和志愿服务的", "时长均要求在我校本科在读期间， 以重庆邮电大学的名义（署名", "单位、或作为申请单位）完成，原则上能够在推免当年 9 月 10", "日前提供支撑材料（具体时间以当年通知为准） 。除经学校批准", "外，休学参加国际组织实习和取得的各类成果不予认可。", "2. 获奖证书/荣誉证书，或者正式发文并加盖主办单位公章", "的获奖通知文件是各类竞赛获奖和荣誉认定的唯一依据； 成果取", "得时间均以证书/发文上的落款时间为准。", "3. 学生以第一作者与学校指导教师联合发表的科研成果，", "若审核鉴定属实， 可以计分。 学生与直系亲属或其他学历、 职称、", "职务明显高于本人者合作的科研成果、竞赛奖项等仅作为参考，", "不纳入学生本人推免遴选综合评价成绩计算体系， 同等条件下可", "优先考虑。", "4. 对学生提交的多项科研成果实行代表作评价，评价重点", "聚焦到创新水平和个人贡献。 同一个学科竞赛， 若参加多次竞赛，", "只计一项最高分； 科研论文代表作不超过3 篇， 其他每类成果若", "有多项加分情况时，只计一项最高分。", "三、计分标准及说明", "加分项分为学科竞赛、 科研成果、 文艺体育竞赛、 创业孵化、", "国家学生体质健康标准测试成绩、 参军服役、 社会服务、 国际组", "织实习等八类。 对每类加分的具体单项设置最高分， 每一类加分", "项设置限定分，所有加分项合计上限为 100 分。具体如下表。", "", "加分项目 分值 限定分 1 限定分 2", "学科竞赛类", "全国一等奖（或特等奖或金奖） 50", "70", "", "全国二等奖（或银奖） 30", "全国三等奖 15", "赛区、省（市）一等奖（或特等奖） 15", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "100", "赛区、省（市）二等奖 10", "科研成果类", "A 类级别论文（第一作者） 50", "50 B1/B2 类级别论文（第一作者） 30", "授权发明专利（第一发明人） 30", "文艺体育", "竞赛类", "文化艺术类/体育类国家级一等奖 20", "20", "文化艺术类/体育类国家级二等奖 15", "文化艺术类/体育类国家级三等奖 10", "文化艺术类/体育类省（市）级一等奖 10", "文化艺术类/体育类省（市）级二等奖 5", "参军服役类", "参军服役荣立三等功 25", "25 参军服役获得优秀士兵 15", "参军服役 10", "创业孵化类", "创办的企业达到国家小型企业划分标准 10", "20", "取得省部级及以上各类竞争性创业奖补 10", "国家学生体质健", "康标准测试类", "国家学生体质健康标准测试成绩前三年平均", "成绩达到 90 分及以上 20", "20 国家学生体质健康标准测试成绩前三年平均", "成绩达到 80 分及以上 15", "国家学生体质健康标准测试成绩前三年平均", "成绩达到 70 分及以上 10", "社会服务类", "社会工作国家奖 /省级奖 20/10", "20", "服务总时长超过 120 小时且参加国家级", "以上重大赛会志愿服务  10", "服务总时长超过 120 小时且参加省部级", "以上重大赛会志愿服务并获评优秀志愿者  8", "服 务总 时 长 超 过80 小时 5", "国际组织实习", "A 类组织3-6 月内/6-12 月/1-2 年 15/20/25", "25", "B 类 组 织 1-3 个 月 内 10", "", "对学科竞赛类、科研成果类、创业孵化类、社会服务类、文", "艺体育竞赛类加分说明如下：", "（一）学科竞赛类加分", "学科竞赛类根据推免实施当年的“人工智能学院推荐学科竞", "赛列表”中的竞赛加分。", "1. A1 类学科竞赛按学院推免生附加分认定及计分细则中各", "级奖项的原始分值进行加分；A2 类学科竞赛按学院推免生附加", "分认定及计分细则中各级奖项的原始分值的 80%进行加分；B 类", "学科竞赛按 学院推免生附加分认定及计分细则中各级奖项的原", "始分值的 40%进行加分。 其他学科竞赛按学院推免生附加分认定", "及计分细则中各级奖项的原始分值的 20%进行加分， 且其他学科", "竞赛加分累计不超过 20 分。", "2. 学科竞赛中同一个获奖认定人数不超过 8 人（按获奖证", "书/文件排序取前 8 人） 。", "3. 学科竞赛中有排名顺序的团队竞赛获奖，其加分规则为：", "个人分值=项目总分值*系数 （按照排名顺序， 权重依次为1、0.7、", "0.5、0.3、0.1、0.1、0.1、0.1） 。获奖证书/文件上明确排名不分", "先后的团体竞赛获奖，个人分值 =项目总分值*0.7。颁发个人获", "奖证书的团体竞赛获奖，团体内成员按个人竞赛执行。", "4. 中国国际大学生创新大赛、 “挑战杯”全国大学生科技学", "术竞赛获得国家级奖励的， 按照学科竞赛类同级别乘以1.5 的系", "", "数后，在限定分数范围内加分。中国国际大学生创新大赛、 “挑", "战杯” 全国大学生科技学术竞赛的各类专项赛获奖按主赛道获奖", "认定。", "5. ICPC 亚洲区域赛及其以上等级赛事获奖：金牌认定为全", "国一等奖；银牌认定为全国二等奖；铜牌认定为全国三等奖。", "6. 华为软件精英挑战赛： 成渝赛区复赛前4 强认定为省 （市）", "级一等奖；成渝赛区复赛前 32 强认定为省（市）级二等奖。", "7. Kaggle 平台举办的竞赛：只认定颁发 Awards Points &", "Medals 的赛事，其中金牌认定为全国一等奖；银牌认定为全国", "二等奖； 其余奖项不予认定。 团队参赛成员获奖排名顺序以学生", "Kaggle 账号个人主页中获奖赛事公布的团队成员排名顺序为准。", "8. 中国高校计算机大赛-团体程序设计天梯赛只认定个人奖", "项为 B 类学科竞赛获奖，团队奖项认定为其他学科竞赛获奖。", "其他学科竞赛： 指中国高等教育学会在推免实施当年发布的", "全国普通高校大学生竞赛排行榜内竞赛项目； 部级政府部门 （至", "少为司级或以上） 、 高等学校教学指导委员会主办的竞赛； 省 （市）", "级政府、 共青团委、 教育委员会主办的竞赛； 国家一级学会主办", "的全国性竞赛。", "（二）科研成果类加分", "表中所列 A 类/B 类级别论文以学校最新科研工作（自然科", "学类）分类认定办法为依据，确定学生科研成果级别。", "", "（三）创业孵化类加分", "1. 学生在校期间以法人身份注册创办企业，且规模达到国", "家小型企业划分标准的，加 10 分。", "2. 学生在校期间获得由省部级及以上政府机构（或官方授", "权机构）颁发的，与创业相关的奖金、资助或补贴的，最高加", "10 分。", "（四）社会服务类加分", "1. 参加国家级重大赛会 的志愿服务仅认定由国家党政机", "关、群团组织（工会、妇联、团委）招募的重大赛会志愿者。", "2. 参加省部级（市级）重大赛会的志愿服务并获评优秀志", "愿者仅认定由省部级 （市级） 党政机关、 群团组织 （工会、 妇联、", "团委）通过学校团委招募的重大赛会志愿者。", "3. 参加国家级、省部级（市级）重大赛会志愿服务及获评", "优秀志愿者的均以相关证书的颁发单位 （公章） 为唯一认定依据。", "（五）文艺体育竞赛类加分", "对于获奖证书以名次计算的文艺体育类竞赛， 则第一、 二名", "按一等奖奖励， 第三、 四名按二等奖奖励， 第五至八名按三等奖", "奖励。", "", "", "重庆邮电大学人工智能学院办公室 2025 年 11 月 5 日印发"]}], "formula": "综测总分 = 德育×10% + 绩点×70% + 体育×10% + 美育×5% + 劳动教育×5% + 学术科技附加 − 扣分", "files": {"zongce": "《人工智能学院本科生综合素质测评实施细则（2025 年 10 月修订版）》", "plan": "《智能技术类培养方案（2026 版）》", "tuimian": "《推荐优秀应届本科毕业生免试攻读研究生实施办法》（重邮人工智能〔2025〕18 号）"}, "comp": [["国甲类", 20, 16, 12, 2], ["国乙类", 15, 12, 9, 1.5], ["国丙类 / 省甲类", 10, 8, 6, 1], ["省乙类", 8, 6.4, 4.8, 0.8], ["校级", 5, 4, 3, 0.5], ["院级", 3, 2.4, 1.8, 0.3]], "groups": [{"group": "通识教育", "src": "mpdf.pdf 第5页 大类学分分配表", "items": [["思想政治理论课", 18, 1], ["体育与军事", 7, 0], ["大学外语", 6, 4], ["素质教育课", 5, 5], ["美育", 0, 2]]}, {"group": "专业教育", "src": "mpdf.pdf 第8-10页 各模块「学分要求」", "items": [["数学与自然科学", 26, 0], ["其它学科基础课", 4.5, 0], ["专业基础课", 23, 3], ["专业方向课", 8.5, 6], ["集中性实践环节", 25, 1], ["实验实践能力达标测评", 1, 0], ["跨界融合课程", 0, 1], ["跨专业类选修课", 0, 2], ["科研训练课程", 2, 0], ["高阶挑战课程", 0, 0], ["个性化创新实践", 0, 3]]}], "conflicts": [{"where": "mpdf.pdf 第10页 （10）高阶挑战课程", "what": "学分要求写「必修：0 学分，选修：0 学分」，但其下仍列了 A2041370 计算机软件能力测评B 共 3 学分", "advice": "请到教务处确认：这门课是否计入毕业学分。系统不替你判断。"}, {"where": "mpdf.pdf 第4页 vs 第5-10页", "what": "第4页声明「选修 24 学分」，但各模块选修相加为 28 学分，多出 4 学分（必修 126 学分则完全一致）", "advice": "可能是模块内额外可选、不冲突，也可能声明有误。请到教务处确认，总数以教务处为准。"}], "creditTotal": 150};
+
+/* ---------- 安全存储：沙箱预览（如 WorkBuddy 内置预览面板）里 localStorage 会抛错，退到内存 ---------- */
+const STORE_OK = (() => { try { localStorage.setItem('jice_t','1'); localStorage.removeItem('jice_t'); return true; } catch(e){ return false; } })();
+const MEMSTORE = {};
+const lsGet = (k) => { if (STORE_OK) { try { return localStorage.getItem(k); } catch(e){} } return MEMSTORE[k] || null; };
+const lsSet = (k,v) => { if (STORE_OK) { try { localStorage.setItem(k,v); return; } catch(e){} } MEMSTORE[k] = v; };
+const lsDel = (k) => { if (STORE_OK) { try { localStorage.removeItem(k); return; } catch(e){} } delete MEMSTORE[k]; };
+
+/* ---------- 状态 ---------- */
+const KEY = 'jice_v2';
+const GRADE_W = {de:.1, ti:.1, mei:.05, lao:.05};
+const load = () => {
+  try {
+    const s = JSON.parse(lsGet(KEY) || 'null');
+    if (s && s.years) return s;
+  } catch (e) {}
+  return blankState(); // 全新用户从空白起步：只保留细则基础分，样例必须显式载入
+};
+function seed() {
+  const mk = (ratio) => {
+    const o = {};
+    DATA.blocks.forEach(b => b.items.forEach(it =>
+      o[it.id] = it.isBase ? it.max : +(it.max * ratio).toFixed(1)));
+    return o;
+  };
+  const years = {};
+  ['大一','大二','大三','大四'].forEach(y => years[y] = {
+    mod: {de: mk(.9), ti: mk(.88), mei: mk(.85), lao: mk(.88), xs: {xs3: 7.5, xs6: 7.5}},
+    courses: [], ded: 0, dedN: y === '大一' ? {dd4: 1} : {}, credit: y === '大一' ? 139 : 0,
+    materials: [], arch: {items: [], seq: 0}, creditMods: {}
+  });
+  years['大一'].courses = [
+    {id:'c1', name:'高等数学 A', credit:5, term:'上', finalW:60, final:86,
+     comps:[{name:'出勤',w:20,s:95},{name:'作业',w:30,s:88},{name:'期末小测',w:50,s:84}]},
+    {id:'c2', name:'大学英语（一）', credit:4, term:'上', finalW:50, final:90,
+     comps:[{name:'出勤',w:20,s:96},{name:'作业',w:40,s:90},{name:'口语',w:40,s:88}]},
+    {id:'c3', name:'程序设计基础', credit:4, term:'下', finalW:40, final:88,
+     comps:[{name:'出勤',w:10,s:100},{name:'实验',w:40,s:92},{name:'课程设计',w:50,s:90}]},
+    {id:'c4', name:'体育（一）', credit:1, term:'下', finalW:30, final:92,
+     comps:[{name:'出勤',w:50,s:95},{name:'体测',w:50,s:88}]}
+  ];
+  years['大一'].materials = [
+    {id:'f1', name:'省甲一等奖证书.jpg', at:'2026-10-24', item:'xs3'},
+    {id:'f2', name:'高数期末卷面.pdf', at:'2026-10-25', item:'c1'}
+  ];
+  return {year:'大一', years, theme:'calm'};
+}
+/* 空白状态：只有细则给的基础分，附加项全 0、无课程无材料无档案 */
+function blankState(theme) {
+  const years = {};
+  ['大一','大二','大三','大四'].forEach(y => {
+    const mod = {};
+    DATA.blocks.forEach(b => {
+      const o = {};
+      b.items.forEach(it => { o[it.id] = 0; });
+      mod[b.key] = o;
+    });
+    years[y] = {mod, courses: [], ded: 0, dedN: {}, credit: 0, materials: [], arch: {items: [], seq: 0}, creditMods: {}};
+  });
+  return {year: '大一', years, theme: theme || 'calm'};
+}
+let S = load();
+/* 旧数据迁移：补 arch / creditMods */
+['大一','大二','大三','大四'].forEach(y => {
+  if (!S.years[y]) return;
+  if (!S.years[y].arch) S.years[y].arch = {items: [], seq: 0};
+  if (!S.years[y].creditMods) S.years[y].creditMods = {};
+});
+
+/* ---------- 计算 ---------- */
+const Y = () => S.years[S.year];
+const YG = g => S.years[g] || S.years[S.year];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => (v === '' || v == null || isNaN(+v)) ? 0 : +v;
+const r1 = x => Math.round(x * 10) / 10;
+
+function partScore(c) {
+  const cs = c.comps.filter(k => k.w > 0 && k.s !== '');
+  if (!cs.length) return null;
+  const w = cs.reduce((a,k) => a + +k.w, 0);
+  return cs.reduce((a,k) => a + (+k.s) * (+k.w), 0) / w;
+}
+function courseScore(c) {
+  const p = partScore(c);
+  if (p === null || c.final === '') return null;
+  const fw = Math.max(0, Math.min(100, +c.finalW));
+  return r1((+c.final) * fw / 100 + p * (100 - fw) / 100);
+}
+function gpaWeighted() {
+  let sw = 0, acc = 0, n = 0;
+  Y().courses.forEach(c => {
+    const s = courseScore(c);
+    if (s === null || !(c.credit > 0)) return;
+    sw += +c.credit; acc += s * c.credit; n++;
+  });
+  return sw ? {avg: r1(acc / sw), credit: r1(sw), n} : null;
+}
+function blockScore(key) {
+  const b = DATA.blocks.find(x => x.key === key);
+  const y = Y();
+  const arch = (y.arch && y.arch[key]) || 0;
+  const sc = y.mod[key] || {};
+  let baseFill = 0, addonSum = arch;
+  b.items.forEach(it => {
+    const v = num(sc[it.id]);
+    if (it.isBase) baseFill += Math.min(v, it.max);   // 基础分也由学生自己填，不预置
+    else addonSum += v;
+  });
+  if (key === 'xs') return Math.min(addonSum, b.cap);
+  /* 细则第六条：板块 = 基础分（自填，封顶 b.base）+ 附加分（封顶 addonCap），总分 cap */
+  return Math.min(Math.min(baseFill, b.base) + Math.min(addonSum, b.addonCap), b.cap);
+}
+/* 扣分：按细则第六条 6 个项目逐项填次数/负分，合计自动算；老存档只有 ded 数字时回落到它 */
+function dedTotal(y) {
+  y = y || Y();
+  if (y.dedN && DATA.deductions) {
+    return r1(DATA.deductions.reduce((a, d) => a + num(y.dedN[d.id]) * d.per, 0));
+  }
+  return num(y.ded);
+}
+function totalScore() {
+  const g = gpaWeighted();
+  const zhi = g ? g.avg : 0;
+  let t = 0;
+  DATA.blocks.forEach(b => {
+    if (b.key === 'xs') { t += blockScore('xs'); return; }
+    t += blockScore(b.key) * b.weight;
+  });
+  t += zhi * 0.7;
+  return r1(t - dedTotal());
+}
+const save = () => lsSet(KEY, JSON.stringify(S));
+
+/* ---------- 渲染 ---------- */
+function renderYears() {
+  const box = document.getElementById('years');
+  box.innerHTML = ['大一','大二','大三','大四'].map(y =>
+    '<button class="' + (y === S.year ? 'on' : '') + '" onclick="UI.setYear(\'' + y + '\')">' + y + '</button>'
+  ).join('');
+}
+function renderHome() {
+  renderYears();
+  const g = gpaWeighted();
+  const t = totalScore();
+  document.getElementById('totalNum').innerHTML = t.toFixed(1) + '<small>/ 120</small>';
+  document.getElementById('totalLab').textContent = '综测总分 · ' + S.year;
+  const tiles = [
+    {k:'绩点', v: g ? g.avg.toFixed(1) : '—', s:'占 70%', go:"UI.go('gpa')", nt:'待填课程'},
+    ...DATA.blocks.filter(b => b.key !== 'xs').map(b => ({
+      k: b.name, v: blockScore(b.key).toFixed(1), s: '占 ' + Math.round(b.weight * 100) + '%',
+      go: "UI.openMod('" + b.key + "')", nt: b.items.length + ' 个条目'
+    }))
+  ];
+  document.getElementById('tiles').innerHTML = tiles.map(x =>
+    '<button class="tile" onclick="' + x.go + '"><div class="k">' + x.k + '</div>' +
+    '<div class="v">' + (x.v === '—' ? '—<small>待填</small>' : x.v) + '</div>' +
+    '<div class="p">' + (x.v === '—' ? x.nt : x.s) + '</div><span class="dot"></span></button>'
+  ).join('') +
+  '<button class="tile" onclick="UI.openMod(\'xs\')" style="grid-column:span 5">' +
+  '<div class="k">学术科技与创新创业 · 单设</div><div class="v">' + blockScore('xs').toFixed(1) +
+  '<small> / ' + 20 + '</small></div><div class="p">直接加进总分，不进五育加权</div></button>';
+  document.getElementById('creditNum').textContent = Y().credit || 0;
+  document.getElementById('matNum').textContent = Y().materials.length;
+  document.getElementById('dedNum').textContent = dedTotal();
+}
+function gpaSample() {
+  let sw = 0, acc = 0;
+  Y().courses.forEach(c => {
+    const s = courseScore(c);
+    if (s === null || !(c.credit > 0)) return;
+    sw += +c.credit; acc += (s < 60 ? 0 : (s - 50) / 10) * c.credit;
+  });
+  return sw ? Math.floor(acc / sw * 100 + 0.5 + 1e-9) / 100 : null;
+}
+function renderGpa() {
+  const g = gpaWeighted();
+  document.getElementById('gpaScore').textContent = g ? g.avg.toFixed(1) : '';
+  const list = Y().courses;
+  document.getElementById('courseRows').innerHTML = list.length ? list.map(c => {
+    const s = courseScore(c);
+    return '<button class="row" onclick="UI.openCourse(\'' + c.id + '\')">' +
+      '<div><div class="nm">' + c.name + '</div>' +
+      '<div class="meta">' + c.credit + ' 学分 · ' + c.term + '学期 · 期末占 ' + c.finalW + '%</div></div>' +
+      '<div class="sc ' + (s === null ? 'wait' : '') + '">' + (s === null ? '待填' : s.toFixed(1)) + '</div>' +
+      '<div class="arw">›</div></button>';
+  }).join('') : '<div class="row"><div class="meta">还没有课程</div></div>';
+  const gs = gpaSample();
+  document.getElementById('gpaSampleBox').innerHTML = gs === null ? '' :
+    '<div class="blk-h"><div class="t">GPA（4.0 制）' + gs.toFixed(2) +
+    '　<span class="a-state st-wait">示例</span></div>' +
+    '<button class="src" onclick="UI.source(\'gpaRule\')">来源</button></div>' +
+    '<div class="blk-b"><div class="hint">示例换算：(课程成绩 − 50) ÷ 10，60 分以下计 0，按学分加权平均。' +
+    '这是演示用的示例规则、不是学校原文——实际 GPA 换算以《学生手册》为准，可拍照上传后按原文替换。</div></div>';
+}
+let curCourse = null;
+function renderCourse() {
+  const c = curCourse;
+  const p = partScore(c), s = courseScore(c);
+  document.getElementById('cTitle').textContent = c.name;
+  document.getElementById('cSub').textContent = c.credit + ' 学分 · ' + c.term + '学期 · 期末占 ' + c.finalW + '%';
+  document.getElementById('partSum').textContent = p === null ? '待填' : '平时分 ' + p.toFixed(1);
+  document.getElementById('partItems').innerHTML = c.comps.map((k, i) =>
+    '<div class="item"><div><div class="nm">' + k.name + '</div><div class="h">权重 ' + k.w + '%</div></div>' +
+    '<input type="number" min="0" max="100" value="' + k.s + '" oninput="UI.comp(' + i + ',this.value)">' +
+    '<div class="of">分</div><button class="src" onclick="UI.source(\'comp\',' + i + ')">来源</button></div>'
+  ).join('') || '<div class="hint">还没有平时条目</div>';
+  document.getElementById('finalSum').textContent = c.final === '' ? '待填' : '期末 ' + c.final;
+  document.getElementById('finalBox').innerHTML =
+    '<div class="item"><div><div class="nm">期末卷面</div><div class="h">占总评 ' + c.finalW + '%</div></div>' +
+    '<input type="number" min="0" max="100" value="' + c.final + '" oninput="UI.final(this.value)"><div class="of">分</div>' +
+    '<button class="src" onclick="UI.source(\'final\')">来源</button></div>';
+  document.getElementById('cScore').textContent = s === null ? '待填' : s.toFixed(1) + ' 分';
+  document.getElementById('cFormula').textContent = s === null ? '缺期末分或平时条目，暂不计算'
+    : '期末 ' + c.final + ' × ' + c.finalW + '% + 平时 ' + p.toFixed(1) + ' × ' + (100 - c.finalW) + '% = ' + s.toFixed(1);
+  document.getElementById('cBar').style.width = s === null ? '0' : Math.min(100, s) + '%';
+}
+let curMod = null;
+function updateModNumbers() {
+  const b = DATA.blocks.find(x => x.key === curMod);
+  document.getElementById('mScoreT').textContent = blockScore(b.key).toFixed(1) + ' 分';
+  document.getElementById('mWeight').textContent = b.key === 'xs' ? '直接计入总分' :
+    '计入总分 ' + (blockScore(b.key) * b.weight).toFixed(2);
+  document.getElementById('mBar').style.width = Math.min(100, blockScore(b.key) / (b.key === 'xs' ? b.cap : 1) * 100) + '%';
+  const _archN = (Y().arch && Y().arch[curMod]) || 0;
+  document.getElementById('mHint').textContent = (b.hint || '') +
+    (_archN ? '　档案袋已计入 ' + _archN.toFixed(1) + ' 分（同步的附加分与手填条目相加后封顶）。' : '');
+}
+/* ---------- 原文阅读器：内嵌全文，按行渲染，可跳转高亮 ---------- */
+let curDoc = 'zongce';
+let docHl = -1;
+const escRe = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function renderDoc(hlLine) {
+  const d = DATA.docs.find(x => x.key === curDoc);
+  if (!d) return;
+  if (hlLine == null) hlLine = docHl;
+  docHl = hlLine;
+  document.getElementById('docSub').textContent = d.name + '　共 ' + d.lines.length +
+    ' 行 · 原文全文内嵌在本文件里，离线也能查；从条目「来源」点「打开原文」直接跳到那一句。';
+  document.getElementById('docTabs').innerHTML = DATA.docs.map(x =>
+    '<button class="' + (x.key === curDoc ? 'on' : '') + '" onclick="UI.openDoc(\'' + x.key + '\',-1)">' +
+    (x.key === 'zongce' ? '综测细则' : '推免办法') + '</button>').join('');
+  document.getElementById('docText').innerHTML = d.lines.map((ln, i) => {
+    const t = ln.trim();
+    const isHead = /^(第[一二三四五六七八九十百]+[条章]|（[一二三四五六七八九十]+）)/.test(t);
+    return '<div class="ln' + (isHead ? ' head' : '') + (i === hlLine ? ' hl' : '') + '">' + esc(ln || ' ') + '</div>';
+  }).join('');
+  const hit = document.querySelector('.doctext .ln.hl');
+  if (hit && hlLine >= 0 && hit.scrollIntoView) setTimeout(() => hit.scrollIntoView({ block: 'center' }), 30);
+}
+
+function renderDed() {
+  const y = Y();
+  if (!y.dedN) y.dedN = {};
+  document.getElementById('dedSum').textContent = dedTotal() + ' 分';
+  document.getElementById('dedRows').innerHTML = DATA.deductions.map(d => {
+    const v = y.dedN[d.id] == null ? '' : y.dedN[d.id];
+    const one = num(y.dedN[d.id]) ? r1(num(y.dedN[d.id]) * d.per) : 0;
+    return '<div class="row">' +
+      '<div><div class="nm">' + d.t + '</div><div class="h">' + d.per + ' 分 / ' + d.unit +
+        '　·　' + d.s + '</div></div>' +
+      '<input type="number" min="0" step="1" inputmode="numeric" value="' + v +
+        '" oninput="UI.setDed(\'' + d.id + '\',this.value)">' +
+      '<div class="of" data-one="' + d.id + '">' + (one ? '扣 ' + one : '—') + '</div>' +
+      '<button class="src" onclick="UI.openDoc(\'zongce\',' + d.line + ')">来源</button></div>';
+  }).join('');
+}
+
+function renderMod() {
+  const b = DATA.blocks.find(x => x.key === curMod);
+  const sc = Y().mod[curMod];
+  document.getElementById('mCrumb').textContent = b.name;
+  document.getElementById('mTitle').textContent = b.name;
+  document.getElementById('mSub').textContent = b.key === 'xs' ? '单设加分项 · 上限 ' + b.cap + ' 分' :
+    (b.base ? '基础分（自填，最高 ' + b.base + '） + 附加分（封顶 ' + b.addonCap + '）· 满分 ' + b.cap : '各条目得分直接相加（满分 ' + b.cap + '）')
+    + ' · 占综测 ' + Math.round(b.weight * 100) + '%';
+  updateModNumbers();
+  document.getElementById('mItems').innerHTML = b.items.map(it =>
+    '<div class="item" style="padding-left:18px;padding-right:18px">' +
+    '<div><div class="nm">' + it.t + '</div>' +
+    '<div class="h">' + (it.hi || ('满分 ' + it.max)) + '</div></div>' +
+    '<input type="number" min="0" max="' + it.max + '" step="0.1" inputmode="decimal" value="' +
+      (sc[it.id] == null ? '' : sc[it.id]) + '" oninput="UI.scoreLive(\'' + it.id + '\',this.value)">' +
+    '<div class="of">/ ' + it.max + '</div><button class="src" onclick="UI.source(\'item\',\'' + it.id + '\')">来源</button></div>'
+  ).join('') +
+  '<div class="modfoot"><button class="btn pri" onclick="UI.commitMod()">✓ 确认本模块分数</button>' +
+  '<span class="hint" id="modState">可直接键盘输入；改动实时计入小计，点确认后写入存档</span></div>';
+}
+
+/* ---------- 交互 ---------- */
+const UI = {
+  go(v) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('act'));
+    document.getElementById('sc-' + v).classList.add('act');
+    window.scrollTo({top:0, behavior:'smooth'});
+    if (v === 'home') renderHome();
+    if (v === 'gpa') renderGpa();
+    if (v === 'mat') renderMats();
+    if (v === 'credits') renderCredits();
+    if (v === 'arch') ARCH.renderArchive();
+    if (v === 'doc') renderDoc();
+    if (v === 'ded') renderDed();
+  },
+  back() {
+    const cur = document.querySelector('.screen.act');
+    if (!cur || cur.id === 'sc-home') return;
+    this.go(cur.dataset.back || 'home');
+  },
+  setYear(y) { S.year = y; save(); renderHome(); },
+  openCourse(id) { curCourse = Y().courses.find(c => c.id === id); renderCourse(); this.go('course'); },
+  openMod(k) { curMod = k; renderMod(); this.go('mod'); },
+  comp(i, v) { curCourse.comps[i].s = v === '' ? '' : +v; save(); renderCourse(); save(); },
+  final(v) { curCourse.final = v === '' ? '' : +v; save(); renderCourse(); },
+  score(id, v) { Y().mod[curMod][id] = v === '' ? '' : +v; save(); renderMod(); renderHome(); },
+  /* 输入即算、但不重绘列表——否则每敲一个字符输入框就被重建，只能靠上下箭头一分一分调 */
+  scoreLive(id, v) {
+    Y().mod[curMod][id] = v === '' ? '' : +v;
+    save();
+    updateModNumbers();
+    const st = document.getElementById('modState');
+    if (st) st.textContent = '已实时计入小计；点「✓ 确认本模块分数」写入存档并回首页更新总分';
+  },
+  commitMod() {
+    save();
+    renderMod();
+    renderHome();
+    const b = DATA.blocks.find(x => x.key === curMod);
+    const st = document.getElementById('modState');
+    if (st) st.textContent = '✓ 已确认并保存：' + b.name + ' ' + blockScore(b.key).toFixed(1) + ' 分，首页总分已同步';
+  },
+  setDed(id, v) {
+    if (!Y().dedN) Y().dedN = {};
+    Y().dedN[id] = v === '' ? '' : +v;
+    save();
+    const d = DATA.deductions.find(x => x.id === id);
+    const one = document.querySelector('[data-one="' + id + '"]');
+    const n = num(Y().dedN[id]);
+    if (one) one.textContent = n ? '扣 ' + r1(n * d.per) : '—';
+    document.getElementById('dedSum').textContent = dedTotal() + ' 分';
+    document.getElementById('dedNum').textContent = dedTotal();
+    document.getElementById('totalNum').innerHTML = totalScore().toFixed(1) + '<small>/ 120</small>';
+  },
+  commitDed() {
+    save(); renderDed(); renderHome();
+    const st = document.getElementById('dedState');
+    if (st) st.textContent = '✓ 已确认：扣分 ' + dedTotal() + ' 分，首页总分已同步';
+  },
+  /* 打开原文并定位：line 为原文字行下标，-1 表示只打开不定位 */
+  openDoc(key, line) {
+    if (key) curDoc = key;
+    docHl = (line == null ? -1 : line);
+    const s = document.getElementById('docSearch');
+    if (s) s.value = '';
+    const h = document.getElementById('docHit');
+    if (h) h.textContent = docHl >= 0 ? '已定位到第 ' + (docHl + 1) + ' 行（黄色高亮）' : '';
+    this.go('doc');
+  },
+  docSearch(q) {
+    q = (q || '').trim();
+    const box = document.getElementById('docText');
+    const hitEl = document.getElementById('docHit');
+    const d = DATA.docs.find(x => x.key === curDoc);
+    if (!q) { renderDoc(-1); if (hitEl) hitEl.textContent = ''; return; }
+    let n = 0;
+    box.innerHTML = d.lines.map(ln => {
+      if (ln.indexOf(q) < 0) return '';
+      n++;
+      return '<div class="ln hl">' + esc(ln).replace(new RegExp(escRe(q), 'g'), '<mark>' + esc(q) + '</mark>') + '</div>';
+    }).join('');
+    if (!n) box.innerHTML = '<div class="ln">没搜到「' + esc(q) + '」，换个词试试（如：美育、荣誉称号、推免、竞赛）。</div>';
+    if (hitEl) hitEl.textContent = n ? ('命中 ' + n + ' 行') : '';
+  },
+  setCreditMod(name, v) {
+    if (v === '') delete Y().creditMods[name]; else Y().creditMods[name] = +v;
+    save(); renderCredits();
+  },
+  toggleTheme() {
+    S.theme = S.theme === 'calm' ? 'dark' : 'calm';
+    document.documentElement.dataset.theme = S.theme; save();
+  },
+  close() { document.getElementById('mask').classList.remove('show'); },
+  dlg(html) {
+    document.getElementById('modal').innerHTML =
+      '<div class="mh"><b>' + html.title + '</b><button onclick="UI.close()">×</button></div>' +
+      '<div class="mb">' + html.body + '</div>';
+    document.getElementById('mask').classList.add('show');
+  },
+  source(kind, arg) {
+    let t = '来源', body = '';
+    if (kind === 'item' || kind === 'block') {
+      const b = DATA.blocks.find(x => x.key === curMod);
+      const it = kind === 'item' ? b.items.find(x => x.id === arg) : null;
+      t = it ? it.t : b.name;
+      body = (it ? '<div class="kv"><div class="k">分值</div><div>' + (it.hi || it.max + ' 分') + '</div></div>' : '') +
+        '<div class="kv"><div class="k">条款坐标</div><div>' + ((it && it.s) || b.src || '—') + '</div></div>' +
+        '<div class="kv"><div class="k">出处文件</div><div>' +
+          '<button class="opendoc" onclick="UI.openDoc(\'zongce\',' + (it ? it.line : -1) + ')">' +
+          esc(DATA.files.zongce) + (it && it.line >= 0 ? ' · 打开原文，跳到那一句 →' : ' · 打开原文 →') +
+          '</button>' +
+          (it && it.line >= 0 ? '' : '<div class="hint">这一条细则未细分到具体一句，打开后可搜索关键词定位。</div>') +
+        '</div></div>' +
+        (it && it.d ? '<div class="quote">' + it.d.replace(/\*\*/g, '') + '</div>' : '') +
+        '<div class="hint">原文照录，未做改写；细则未细分到该条目时标「待核」，不猜。</div>';
+    } else if (kind === 'course' || kind === 'comp' || kind === 'final') {
+      t = curCourse.name;
+      body = '<div class="kv"><div class="k">课程</div><div>' + curCourse.name + ' · ' + curCourse.credit + ' 学分</div></div>' +
+        '<div class="kv"><div class="k">出处文件</div><div>' + DATA.files.plan + '</div></div>' +
+        '<div class="kv"><div class="k">算式出处</div><div>综测细则（二）Σ(课程成绩×学分)÷Σ学分</div></div>' +
+        '<div class="hint">平时构成来自任课教师的评分规则，模板块可存可复用。</div>';
+    } else if (kind === 'credit') {
+      t = '毕业学分'; body = '<div class="kv"><div class="k">要求</div><div>150 学分（必修 120.5 + 选修）</div></div>' +
+        '<div class="kv"><div class="k">已修</div><div>' + (Y().credit || 0) + ' 学分</div></div>' +
+        '<div class="kv"><div class="k">出处</div><div>' + DATA.files.plan + '</div></div>';
+    } else if (kind === 'gpaRule') {
+      t = 'GPA 示例规则'; body = '<div class="kv"><div class="k">换算</div><div>(课程成绩 − 50) ÷ 10，60 分以下计 0，按学分加权</div></div>' +
+        '<div class="kv"><div class="k">性质</div><div>示例规则，标注「示例」，不是学校原文</div></div>' +
+        '<div class="kv"><div class="k">建议</div><div>拍照上传《学生手册》成绩与学分部分，按原文替换</div></div>';
+    } else {
+      t = '扣分明细'; body = '<div class="kv"><div class="k">当前扣分</div><div>' + (Y().ded || 0) + ' 分</div></div>' +
+        '<div class="kv"><div class="k">出处</div><div>' + DATA.files.zongce + ' · 第七条</div></div>';
+    }
+    this.dlg({title: t, body});
+  },
+  pickFile() { document.getElementById('file').click(); },
+  openMaterials() { this.go('mat'); },
+  parseDlg() {
+    this.dlg({
+      title: '粘贴材料自动解析',
+      body: '<div class="hint">把老师给的评分说明、成绩单文字贴进来，自动抽「平时构成」和「期末分」。</div>' +
+        '<textarea id="pasteBox" placeholder="例：出勤 20% 95分；作业 30% 88分；期末 60% 86分"></textarea>' +
+        '<div class="btnrow"><button class="btn pri" onclick="UI.doParse()">解析填入</button>' +
+        '<button class="btn gh" onclick="UI.close()">取消</button></div>'
+    });
+  },
+  doParse() {
+    const txt = (document.getElementById('pasteBox') || {}).value || '';
+    const comps = [], see = [];
+    txt.split(/[；;\n]/).forEach(seg => {
+      const w = seg.match(/(\d+(?:\.\d+)?)\s*%/);
+      const sc = seg.match(/(\d{2,3}(?:\.\d+)?)\s*分/);
+      const nm = seg.replace(/[0-9.%分；;]/g, '').trim();
+      if (w && nm) comps.push({name: nm, w: +w[1], s: sc ? +sc[1] : ''});
+    });
+    const fw = txt.match(/(?:期末|笔试)[^0-9%]{0,6}(\d+(?:\.\d+)?)\s*%/);
+    const fs = txt.match(/期末[^0-9%]{0,10}(\d{2,3}(?:\.\d+)?)\s*分/);
+    if (comps.length) curCourse.comps = comps;
+    if (fw) curCourse.finalW = +fw[1];
+    if (fs) curCourse.final = +fs[1];
+    save(); this.close(); renderCourse();
+    if (!comps.length && !fs) alert('没识别出结构：请按「出勤 20% 95分」这样的写法重贴一次。');
+  },
+  readFiles(files) {
+    [...files].forEach(f => {
+      const isText = /\.(txt|md|csv)$/i.test(f.name);
+      if (!isText) {
+        Y().materials.unshift({id:'f' + Date.now(), name:f.name, at:new Date().toISOString().slice(0,10), item:''});
+        save(); return;
+      }
+      const fr = new FileReader();
+      fr.onload = () => {
+        Y().materials.unshift({id:'f' + Date.now(), name:f.name, at:new Date().toISOString().slice(0,10), item:'', text:String(fr.result).slice(0,400)});
+        save(); renderHome();
+      };
+      fr.readAsText(f, 'utf-8');
+    });
+    renderHome();
+  }
+};
+
+function renderMats() {
+  const list = Y().materials;
+  document.getElementById('matRows').innerHTML = list.length ? list.map(x =>
+    '<button class="row" onclick="UI.source(\'mat\',\'' + x.id + '\')">' +
+    '<div><div class="nm">' + x.name + '</div><div class="meta">' + x.at + '</div></div>' +
+    '<div class="arw" style="margin-left:auto">›</div></button>'
+  ).join('') : '<div class="row"><div class="meta">还没有材料</div></div>';
+}
+
+/* ---------- 学分明细（侧层） ---------- */
+function renderCredits() {
+  const mods = Y().creditMods || {};
+  let h = '';
+  DATA.groups.forEach(g => {
+    h += '<div class="grp">' + esc(g.group) + '</div>';
+    h += '<table class="sz"><thead><tr><th>模块</th><th>必修</th><th>选修</th><th>合计</th><th>已修</th></tr></thead><tbody>';
+    g.items.forEach(it => {
+      const v = mods[it[0]];
+      h += '<tr><td>' + esc(it[0]) + '</td><td>' + it[1] + '</td><td>' + it[2] + '</td><td>' + (it[1] + it[2]) + '</td>';
+      h += '<td><input type="number" step="0.5" min="0" placeholder="—" value="' + (v !== undefined ? v : '') +
+        '" oninput="UI.setCreditMod(\'' + it[0] + '\',this.value)"></td></tr>';
+    });
+    h += '</tbody></table>';
+    h += '<div class="hint">出处：' + esc(g.src) + '</div>';
+  });
+  h += '<div class="grp" style="color:var(--warn)">两处方案自相矛盾（照实呈现，不替你抹平）</div>';
+  DATA.conflicts.forEach(c => {
+    h += '<div class="conflict"><div class="cw">📍 ' + esc(c.where) + '</div>' +
+      '<div class="cx">' + esc(c.what) + '</div><div class="ca">→ ' + esc(c.advice) + '</div></div>';
+  });
+  h += '<div class="hint" style="margin-top:12px">出处都写了页码 · 有出入以教务处和学院最新通知为准</div>';
+  document.getElementById('creditsWrap').innerHTML = h;
+}
+
+/* ---------- 综测档案袋（侧层，移植自 v1 ARCH） ---------- */
+var ARCH = (function(){
+  var PROFILE_KEY = 'jice_profile_v1';
+  var GRADES = ['大一','大二','大三','大四'];
+  var COHORTS = ['2024','2025','2026'];
+  var FOLDERS = [
+    {key:'comp',  name:'学科竞赛',        block:'xs',  icon:'🏆'},
+    {key:'sport', name:'体测与体育',      block:'ti',  icon:'🏃'},
+    {key:'de',    name:'学生工作与社会实践', block:'de',  icon:'🌱'},
+    {key:'mei',   name:'讲座与美育',      block:'mei', icon:'🎤'},
+    {key:'lao',   name:'志愿服务与劳动',   block:'lao', icon:'🤝'},
+    {key:'other', name:'其他材料',        block:null,  icon:'📦'}
+  ];
+  var TYPES = [
+    {key:'comp',     label:'学科竞赛获奖',   folder:'comp'},
+    {key:'paper',    label:'学术论文 / 知识产权 / 科研项目', folder:'comp'},
+    {key:'sport',    label:'体测（国家学生体质健康标准）', folder:'sport'},
+    {key:'pe',       label:'大学体育课 / 阳光体育打卡', folder:'sport'},
+    {key:'cadre',    label:'学生工作（干部任职考核）', folder:'de'},
+    {key:'honor',    label:'荣誉称号',       folder:'de'},
+    {key:'practice', label:'社会实践团队获奖', folder:'de'},
+    {key:'thanks',   label:'书面感谢 / 通报表扬', folder:'de'},
+    {key:'party',    label:'党校团校结业',   folder:'de'},
+    {key:'lecture',  label:'讲座打卡记录',   folder:'mei'},
+    {key:'volunteer',label:'志愿服务记录',   folder:'lao'},
+    {key:'other',    label:'其他材料',       folder:'other'}
+  ];
+  function typeOf(k){ for(var i=0;i<TYPES.length;i++) if(TYPES[i].key===k) return TYPES[i]; return TYPES[TYPES.length-1]; }
+  function folderOf(k){ for(var i=0;i<FOLDERS.length;i++) if(FOLDERS[i].key===k) return FOLDERS[i]; return FOLDERS[FOLDERS.length-1]; }
+  var COMP_PRIZE = ['一等','二等','三等','参赛/优秀奖'];
+  var COMP = DATA.comp;
+  var COMP_LEVEL_NAMES = COMP.map(function(x){ return x[0]; });
+  var ui = {folder:'all', q:'', status:'all'};
+  var AR = () => Y().arch;
+
+  function getProfile(){
+    try{ var s=lsGet(PROFILE_KEY); if(s) return JSON.parse(s); }catch(e){}
+    return null;
+  }
+  function saveProfileWith(g,c){
+    var pf={grade:g, cohort:c, at:new Date().toISOString().slice(0,10)};
+    lsSet(PROFILE_KEY, JSON.stringify(pf));
+    return pf;
+  }
+  var pmPick={grade:null,cohort:null};
+  function gate(){
+    if(getProfile()) return;
+    var gh='', ch='';
+    GRADES.forEach(function(g){ gh+='<button type="button" class="m-opt" data-g="'+g+'">'+g+'</button>'; });
+    COHORTS.forEach(function(c){ ch+='<button type="button" class="m-opt" data-c="'+c+'">'+c+' 级</button>'; });
+    UI.dlg({title:'先建档：你现在的年级与入学级',
+      body:'<div class="hint">年级决定部分口径（如体育课计分方式），入学级决定培养方案版本。〔v2.2〕</div>' +
+        (STORE_OK?'':'<div class="hint" style="color:var(--warn)">当前是沙箱预览环境，不支持本地存储：本次的档案和数据只保存在内存里，刷新页面就会清空。正式使用请用 Edge 双击打开文件，或用线上链接。</div>') +
+        '<div style="margin:10px 0 2px"><div class="m-lab">年级</div><div id="pmGrade">'+gh+'</div></div>' +
+        '<div><div class="m-lab">入学级</div><div id="pmCohort">'+ch+'</div></div>' +
+        '<div class="hint" id="pmErr" style="color:var(--warn)"></div>' +
+        '<div class="btnrow"><button type="button" class="btn pri" id="pmSave">建档</button>' +
+        '<button type="button" class="opbtn" id="pmSample">用样例数据开始 →</button></div>'});
+    bindGate();
+  }
+  /* 建档弹窗统一用事件委托：不用 inline onclick，避免浏览器扩展/翻译剥离后整窗失效 */
+  function bindGate(){
+    var m=document.getElementById('modal');
+    if(!m||m._gateBound) return;
+    m._gateBound=true;
+    m.addEventListener('click',function(e){
+      var t=e.target;
+      if(!t||!t.classList) return;
+      if(t.classList.contains('m-opt')){
+        if(t.dataset.g!==undefined){ ARCH.pickGrade(t,t.dataset.g); return; }
+        if(t.dataset.c!==undefined){ ARCH.pickCohort(t,t.dataset.c); return; }
+        return;
+      }
+      if(t.id==='pmSave') ARCH.saveProfile();
+      if(t.id==='pmSample') ARCH.useSample();
+    });
+  }
+  function pickGrade(el,g){ pmPick.grade=g; Array.prototype.forEach.call(document.querySelectorAll('#pmGrade .m-opt'),function(b){b.classList.remove('on');}); el.classList.add('on'); }
+  function pickCohort(el,c){ pmPick.cohort=c; Array.prototype.forEach.call(document.querySelectorAll('#pmCohort .m-opt'),function(b){b.classList.remove('on');}); el.classList.add('on'); }
+  function saveProfile(){
+    if(saveProfile._busy) return;
+    var err=document.getElementById('pmErr');
+    function fail(m){
+      saveProfile._busy=false;
+      if(err) err.textContent='建档没成功：'+m+'。选项仍保持选中，可直接再点建档；反复出现请按 F12 把 Console 红字截图反馈。';
+    }
+    if(!pmPick.grade || !pmPick.cohort){
+      if(err) err.textContent='年级和入学级都要选，两项决定不同的加分口径。';
+      return;
+    }
+    saveProfile._busy=true;
+    try{ saveProfileWith(pmPick.grade, pmPick.cohort); }
+    catch(e){ fail('本机不允许存储（'+((e&&e.message)||e)+'）'); return; }
+    try{ rematchAll(); }
+    catch(e){ fail(((e&&e.message)||String(e))); return; }
+    try{ UI.close(); }catch(e){}
+    try{ renderHome(); }catch(e){}
+    saveProfile._busy=false;
+  }
+
+  /* 原图存储：IndexedDB，jsdom 下自动退内存 */
+  var IDB=(function(){
+    var db=null, ok=false, mem={};
+    try{
+      var rq=indexedDB.open('jice_archive_v1',1);
+      rq.onupgradeneeded=function(e){ e.target.result.createObjectStore('files'); };
+      rq.onsuccess=function(e){ db=e.target.result; ok=true; };
+      rq.onerror=function(){ ok=false; };
+    }catch(e){ ok=false; }
+    function put(id,blob,cb){
+      if(ok&&db){
+        try{
+          var tx=db.transaction(['files'],'readwrite');
+          tx.objectStore('files').put(blob,id);
+          tx.oncomplete=function(){ cb&&cb(true); };
+          tx.onerror=function(){ mem[id]=blob; cb&&cb(false); };
+        }catch(e){ mem[id]=blob; cb&&cb(false); }
+      } else { mem[id]=blob; cb&&cb(false); }
+    }
+    function get(id,cb){
+      if(ok&&db){
+        try{
+          var tx=db.transaction(['files'],'readonly');
+          var r=tx.objectStore('files').get(id);
+          r.onsuccess=function(){ cb&&cb(r.result||mem[id]||null); };
+          r.onerror=function(){ cb&&cb(mem[id]||null); };
+        }catch(e){ cb&&cb(mem[id]||null); }
+      } else cb&&cb(mem[id]||null);
+    }
+    function del(id){ if(ok&&db){ try{ db.transaction(['files'],'readwrite').objectStore('files').delete(id); }catch(e){} } delete mem[id]; }
+    return {put:put,get:get,del:del,ok:function(){return ok;}};
+  })();
+
+  /* 匹配引擎：只吃细则里有的口径 */
+  function match(d){
+    var pf=getProfile()||{grade:'大一'};
+    var grade=pf.grade;
+    if(d.type==='comp'){
+      var li=-1;
+      for(var i=0;i<COMP.length;i++) if(COMP[i][0]===d.level) li=i;
+      if(li<0) return wait('xs','学科竞赛获奖','细则第六条（六）4','竞赛级别不在细则六级表内，待核');
+      var pi=COMP_PRIZE.indexOf(d.prize);
+      if(pi<0) return wait('xs','学科竞赛获奖','细则第六条（六）4','获奖等级没选，待核');
+      var base=COMP[li][pi+1];
+      if(base===undefined) return wait('xs','学科竞赛获奖','细则第六条（六）4','获奖等级不在表内，待核');
+      if(!d.firstUnit) return no('xs','学科竞赛获奖','细则第十五条','非以学校为第一单位的成果，一分不算');
+      var place=parseInt(d.place,10);
+      if(!place||place<1) return wait('xs','学科竞赛获奖','细则第六条（六）4 + 认定人数上限','队内排序没填或无效——同一获奖按证书排序取前 8 人，待核');
+      if(place>8) return no('xs','学科竞赛获奖','细则第六条（六）4 + 认定人数上限','队内第 '+place+' 名超出前 8 人认定上限，不加分');
+      var divisor=1+(place-1)*0.5;
+      var sc=r1(base/divisor);
+      if(sc>20) sc=20;
+      return ok('xs','学科竞赛获奖','细则第六条（六）4', sc,
+        d.level+' '+d.prize+' 基础 '+base+' 分 ÷ 队内第 '+place+' 名折算 '+divisor+' = '+sc+' 分（单项封顶 20）');
+    }
+    if(d.type==='sport'){
+      var m={'优秀':40,'良好':32,'及格':24,'不及格':0};
+      if(m[d.result]===undefined) return wait('ti','《国家学生体质健康标准》测试','细则第六条（三）1','体测等次没选，待核');
+      return ok('ti','《国家学生体质健康标准》测试','细则第六条（三）1', m[d.result], '体测'+d.result+' → '+m[d.result]+' 分');
+    }
+    if(d.type==='pe'){
+      if(grade==='大一'||grade==='大二'){
+        var avg=parseFloat(d.avg);
+        if(isNaN(avg)||avg<0||avg>100) return wait('ti','大学体育课成绩','细则第六条（三）2','两学期平均分没填或不在 0–100，待核');
+        var s2=r1(avg*0.4);
+        return ok('ti','大学体育课成绩','细则第六条（三）2', s2, grade+'按两学期体育课平均成绩的 40% 计分：'+avg+' × 40% = '+s2+' 分');
+      }
+      if(d.daka!=='yes'&&d.daka!=='no') return wait('ti','大学体育课成绩','细则第六条（三）2','阳光体育打卡是否达标没选，待核');
+      return ok('ti','大学体育课成绩','细则第六条（三）2', d.daka==='yes'?40:0,
+        grade+'按阳光体育打卡计分：'+(d.daka==='yes'?'达标直接 40 分':'不达标 0 分'));
+    }
+    if(d.type==='cadre'){
+      var cm={'优秀':20,'良好':15,'合格':10,'不合格':0};
+      if(cm[d.assess]===undefined) return wait('de','学生干部任职考核','细则第六条（一）2（1）','考核等次没选，待核');
+      var half=(d.role==='other');
+      var s3=half?r1(cm[d.assess]/2):cm[d.assess];
+      return ok('de','学生干部任职考核','细则第六条（一）2（1）', s3,
+        (half?'其余学生干部参照减半：':'主要学生干部：')+'考核'+d.assess+' → '+s3+' 分/项');
+    }
+    if(d.type==='honor'){
+      var hm={'国家级':25,'省部级':15,'校级':10};
+      if(hm[d.level]===undefined) return wait('de','荣誉称号','细则第六条（一）2（2）','荣誉级别没选，待核');
+      return ok('de','荣誉称号','细则第六条（一）2（2）', hm[d.level], d.level+'荣誉称号 → '+hm[d.level]+' 分');
+    }
+    if(d.type==='practice'){
+      var pm={'团长':{'国家级':25,'省部级':15,'校级':8},'团员':{'国家级':20,'省部级':10,'校级':4}};
+      if(!pm[d.role]||pm[d.role][d.level]===undefined) return wait('de','社会实践团队获奖','细则第六条（一）2（4）③','角色或级别没选，待核');
+      return ok('de','社会实践团队获奖','细则第六条（一）2（4）③', pm[d.role][d.level],
+        d.level+'奖励 · '+d.role+' → '+pm[d.role][d.level]+' 分');
+    }
+    if(d.type==='thanks'){
+      var tm={'校级':5,'省部级':10,'国家级':15};
+      if(tm[d.level]===undefined) return wait('de','书面感谢或通报表扬','细则第六条（一）2（4）①','级别没选，待核');
+      return ok('de','书面感谢或通报表扬','细则第六条（一）2（4）①', tm[d.level], d.level+'书面感谢/通报表扬 → '+tm[d.level]+' 分');
+    }
+    if(d.type==='party'){
+      return ok('de','党校及团校学习结业','细则第六条（一）2（4）②', 5, '党校/团校学习并结业 → 5 分');
+    }
+    if(d.type==='lecture'){
+      return wait('mei','美育附加分','细则第六条（四）2','单场讲座分值细则未结构化（累计封顶 20 分）——可手动填分并附条款坐标');
+    }
+    if(d.type==='volunteer'){
+      return wait('lao','劳动教育附加分','细则第六条（五）2','单次志愿服务分值细则未结构化（累计不超过 40 分）——可手动填分并附条款坐标');
+    }
+    if(d.type==='paper'){
+      return wait('xs',null,'细则第六条（六）1–5',
+        '作者权重另算（第二作者 0.5、第三作者 0.3、第四作者起不加分），脚本不自动应用——请按原文手动核算后填分');
+    }
+    return wait('other',null,null,'未匹配到细则条目，归入「其他材料」待核');
+  }
+  function ok(block,route,clause,score,why){
+    return {block:block,route:route,clause:clause,score:score,state:'确定',why:why};
+  }
+  function wait(block,route,clause,why){
+    return {block:block,route:route,clause:clause,score:0,state:'待核',why:why};
+  }
+  function no(block,route,clause,why){
+    return {block:block,route:route,clause:clause,score:0,state:'不计分',why:why};
+  }
+
+  /* 粘贴识别（离线正则，只填有把握的） */
+  function setSel(id,v){ var e=document.getElementById(id); if(e) e.value=v; }
+  function parsePaste(){
+    var t=(document.getElementById('upPaste').value||'');
+    var found=[];
+    var lv=null;
+    if(/国甲|国家甲级|全国甲/.test(t)) lv='国甲类';
+    else if(/国乙|国家乙级|全国乙/.test(t)) lv='国乙类';
+    else if(/省甲/.test(t)) lv='国丙类 / 省甲类';
+    else if(/国丙/.test(t)) lv='国丙类 / 省甲类';
+    else if(/省乙/.test(t)) lv='省乙类';
+    else if(/校级|校园/.test(t)) lv='校级';
+    else if(/院级/.test(t)) lv='院级';
+    var pz=null;
+    if(/一等|金奖|冠军|第一名/.test(t)) pz='一等';
+    else if(/二等|银奖|亚军/.test(t)) pz='二等';
+    else if(/三等|铜奖|季军/.test(t)) pz='三等';
+    else if(/优秀奖|参赛|参与/.test(t)) pz='参赛/优秀奖';
+    var pl=null, mp=t.match(/队内第?\s*([0-9一二三四五六七八]+)\s*名|排名\s*第?\s*([0-9]+)|第\s*([0-9])\s*名/);
+    if(mp){
+      var cn={'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8};
+      pl=parseInt(mp[1],10)||parseInt(mp[2],10)||parseInt(mp[3],10)||cn[mp[1]]||null;
+    }
+    if(lv){ setSel('f_level',lv); found.push('级别：'+lv); }
+    if(pz){ setSel('f_prize',pz); found.push('等级：'+pz); }
+    if(pl){ setSel('f_place',String(pl)); found.push('队内第 '+pl+' 名'); }
+    if(/优秀/.test(t)&&/体测|体质/.test(t)){ setSel('f_result','优秀'); found.push('体测：优秀'); }
+    else if(/良好/.test(t)&&/体测|体质/.test(t)){ setSel('f_result','良好'); found.push('体测：良好'); }
+    else if(/不及格/.test(t)&&/体测|体质/.test(t)){ setSel('f_result','不及格'); found.push('体测：不及格'); }
+    else if(/及格/.test(t)&&/体测|体质/.test(t)){ setSel('f_result','及格'); found.push('体测：及格'); }
+    previewMatch();
+    var pv=document.getElementById('upPreview');
+    if(pv&&found.length) pv.innerHTML+='<div class="u-chips">'+found.map(function(x){return '<span class="u-chip">已识别 '+esc(x)+'</span>';}).join('')+'</div>';
+  }
+
+  /* 上传弹窗：按材料类型渲染动态字段 */
+  function fld(label, inner){
+    return '<div class="u-fld"><div class="m-lab">'+esc(label)+'</div>'+inner+'</div>';
+  }
+  function sel(id, optsHtml){
+    return '<select id="'+id+'" class="u-sel" onchange="ARCH.previewMatch()">'+optsHtml+'</select>';
+  }
+  function opt(v, l){ return '<option value="'+esc(v)+'">'+esc(l)+'</option>'; }
+  function chk(id, checked, label){
+    return '<label class="u-chk"><input type="checkbox" id="'+id+'"'+(checked?' checked':'')+
+      ' onchange="ARCH.previewMatch()"> '+esc(label)+'</label>';
+  }
+  function inp(id, ph, type){
+    return '<input id="'+id+'" class="u-in" type="'+(type||'text')+'" placeholder="'+esc(ph||'')+
+      '" oninput="ARCH.previewMatch()">';
+  }
+  function selOpts(list){ return list.map(function(x){ return opt(x, x); }).join(''); }
+  var FIELD_SPECS = {
+    comp: function(){
+      return fld('竞赛级别（细则六级表）', sel('f_level', selOpts(COMP_LEVEL_NAMES))) +
+             fld('获奖等级', sel('f_prize', selOpts(COMP_PRIZE))) +
+             fld('队内排序（按获奖证书排序，取前 8 人）', inp('f_place', '如 1', 'number')) +
+             fld('署名单位', chk('f_firstUnit', true, '学校为第一署名单位（写在别的单位下不计分）'));
+    },
+    paper: function(){
+      return fld('成果类别', sel('f_pcat', selOpts(['学术论文','决策咨询成果','知识产权','科研项目']))) +
+             fld('作者位次', sel('f_rank', selOpts(['第一作者','第二作者','第三作者','第四作者及以后']))) +
+             fld('说明', '<div class="hint">作者权重细则另算（第二作者 0.5、第三作者 0.3、第四作者起不加分），系统不自动应用——保存后为「待核」，请在详情里按原文手动核分。</div>');
+    },
+    sport: function(){ return fld('体测等次', sel('f_result', selOpts(['优秀','良好','及格','不及格']))); },
+    pe: function(){
+      var pf=getProfile()||{grade:'大一'};
+      if(pf.grade==='大一'||pf.grade==='大二'){
+        return fld('两学期体育课平均成绩（0–100）', inp('f_avg', '如 86', 'number')) +
+               fld('口径', '<div class="hint">'+esc(pf.grade)+'：按两学期体育课平均成绩的 40% 计分（细则第六条（三）2）。</div>');
+      }
+      return fld('阳光体育打卡是否达标', sel('f_daka', opt('yes','达标')+opt('no','不达标'))) +
+             fld('口径', '<div class="hint">'+esc(pf.grade)+'：按阳光体育打卡计分，达标 40 分、不达标 0 分（细则第六条（三）2）。</div>');
+    },
+    cadre: function(){
+      return fld('岗位类型', sel('f_role', opt('main','主要学生干部')+opt('other','其他学生干部（减半）'))) +
+             fld('任职考核等次', sel('f_assess', selOpts(['优秀','良好','合格','不合格'])));
+    },
+    honor: function(){ return fld('荣誉级别', sel('f_level', selOpts(['国家级','省部级','校级']))); },
+    practice: function(){
+      return fld('奖励级别', sel('f_level', selOpts(['国家级','省部级','校级']))) +
+             fld('团队角色', sel('f_role', selOpts(['团长','团员'])));
+    },
+    thanks: function(){ return fld('级别', sel('f_level', selOpts(['校级','省部级','国家级']))); },
+    party: function(){ return fld('说明', '<div class="hint">党校/团校学习并结业，细则第六条（一）2（4）②固定 5 分。</div>'); },
+    lecture: function(){
+      return fld('打卡场次', inp('f_times', '如 3', 'number')) +
+             fld('说明', '<div class="hint">单场讲座分值细则未结构化，累计封顶 20 分——保存后为「待核」，可在详情里手动填分并附条款坐标。</div>');
+    },
+    volunteer: function(){
+      return fld('服务时长（小时）', inp('f_hours', '如 12', 'number')) +
+             fld('说明', '<div class="hint">单次志愿服务分值细则未结构化，累计不超过 40 分——保存后为「待核」，可在详情里手动填分并附条款坐标。</div>');
+    },
+    other: function(){
+      return fld('备注（为什么材料、想归到哪类）', '<textarea id="f_note" rows="3" placeholder="如：企业实习证明，想归到社会实践"></textarea>');
+    }
+  };
+  function val(id){ var e=document.getElementById(id); return e?e.value:''; }
+  function onTypeChange(){
+    var t=val('upType')||'other';
+    var box=document.getElementById('upFields');
+    if(box) box.innerHTML=(FIELD_SPECS[t]||FIELD_SPECS.other)();
+    previewMatch();
+  }
+  function openUpload(){
+    UI.dlg({title: '上传材料', body:
+      '<div class="u-fld"><div class="m-lab">材料类型</div>' +
+      '<select id="upType" class="u-sel" onchange="ARCH.onTypeChange()"></select></div>' +
+      '<div class="u-fld"><div class="m-lab">材料名称（必填）</div>' +
+      '<input id="upName" class="u-in" placeholder="如：省甲一等奖证书"></div>' +
+      '<div class="u-fld"><div class="m-lab">获得日期</div>' +
+      '<input id="upDate" class="u-in" type="date"></div>' +
+      '<div class="u-fld"><div class="m-lab">原图（只存本机 IndexedDB）</div>' +
+      '<input id="upFile" type="file"></div>' +
+      '<div class="u-fld"><div class="m-lab">粘贴相关文字（可选，自动识别关键字段）</div>' +
+      '<textarea id="upPaste" rows="2" placeholder="如：省甲一等奖，队内第 2 名"></textarea>' +
+      '<div class="btnrow"><button class="btn gh" onclick="ARCH.parsePaste()">粘贴识别</button></div></div>' +
+      '<div id="upPreview"></div>' +
+      '<div id="upFields"></div>' +
+      '<div class="btnrow"><button class="btn pri" onclick="ARCH.saveMaterial()">保存并归档</button>' +
+      '<button class="btn gh" onclick="UI.close()">取消</button></div>'});
+    var s=document.getElementById('upType');
+    if(s && !s.options.length){
+      s.innerHTML=TYPES.map(function(t){ return opt(t.key, t.label); }).join('');
+    }
+    var ids=['upName','upDate','upPaste','upFile'];
+    ids.forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
+    var pv=document.getElementById('upPreview'); if(pv) pv.innerHTML='';
+    onTypeChange();
+  }
+  function collect(){
+    var t=val('upType')||'other';
+    var d={type:t, name:(val('upName')||'').trim(), date:val('upDate')||'', paste:(val('upPaste')||'').trim()};
+    if(t==='comp'){
+      d.level=val('f_level'); d.prize=val('f_prize'); d.place=val('f_place');
+      var fu=document.getElementById('f_firstUnit'); d.firstUnit=fu?!!fu.checked:true;
+    } else if(t==='sport'){ d.result=val('f_result'); }
+    else if(t==='pe'){ d.avg=val('f_avg'); d.daka=val('f_daka'); }
+    else if(t==='cadre'){ d.role=val('f_role'); d.assess=val('f_assess'); }
+    else if(t==='honor'){ d.level=val('f_level'); }
+    else if(t==='practice'){ d.level=val('f_level'); d.role=val('f_role'); }
+    else if(t==='thanks'){ d.level=val('f_level'); }
+    else if(t==='paper'){ d.pcat=val('f_pcat'); d.rank=val('f_rank'); }
+    else if(t==='lecture'){ d.times=val('f_times'); }
+    else if(t==='volunteer'){ d.hours=val('f_hours'); }
+    else if(t==='party'){ }
+    else { d.note=val('f_note'); }
+    return d;
+  }
+  function blockName(k){ var b=DATA.blocks.find(function(x){return x.key===k;}); return b?b.name:k; }
+  function isCounted(it){ return it.state==='确定'||it.state==='已同步'; }
+  function previewMatch(){
+    var d=collect();
+    var m=match(d);
+    var ty=typeOf(d.type), fo=folderOf(ty.folder);
+    var pv=document.getElementById('upPreview');
+    if(!pv) return;
+    var sc=(m.state==='确定')?(m.score+' 分'):(m.state==='不计分'?'不计分（0 分）':'待核（暂计 0）');
+    pv.innerHTML='<div class="p-score">'+esc(sc)+'</div>'+
+      '<div style="margin-top:6px">归入文件夹：<b>'+esc(fo.name)+'</b>'+
+      (fo.block?'　账本板块：<b>'+esc(blockName(fo.block))+'</b>':'　不写账本')+'</div>'+
+      (m.clause?'<div style="margin-top:2px">条款坐标：<b>'+esc(m.clause)+'</b></div>':'')+
+      '<div style="margin-top:2px">'+esc(m.why)+'</div>'+
+      '<div class="hint" style="margin-top:8px">保存并归档后才计入档案袋总分；「待核」项可在详情里手动填分并附条款坐标，确认后才计入。</div>';
+  }
+  function saveMaterial(){
+    var d=collect();
+    if(!d.name){ alert('材料名称必填——写清楚是什么奖、什么记录。'); return; }
+    var m=match(d);
+    var ty=typeOf(d.type), fo=folderOf(ty.folder);
+    var seq=(AR().seq||0)+1;
+    var item={id:'m'+seq+'_'+Date.now().toString(36), seq:seq, type:d.type, folder:fo.key,
+      name:d.name, date:d.date, paste:d.paste, fields:d, fileId:null, fileType:'', year:S.year,
+      match:m, score:(m.state==='确定'?m.score:0), state:(m.state==='确定'?'确定':(m.state==='不计分'?'不计分':'待核')),
+      manual:false, syncedScore:0, clause:(m.state==='确定'||m.state==='不计分')?m.clause:'',
+      createdAt:new Date().toISOString().slice(0,10)};
+    AR().items.push(item); AR().seq=seq; save();
+    var fEl=document.getElementById('upFile');
+    var f=fEl&&fEl.files&&fEl.files[0];
+    function done(){ UI.close(); renderHome(); ARCH.renderArchive(); }
+    if(f && FileReader){
+      try{
+        var fr=new FileReader();
+        fr.onload=function(){ try{ IDB.put(item.id, fr.result, function(){}); }catch(e){} done(); };
+        fr.onerror=function(){ done(); };
+        fr.readAsArrayBuffer(f);
+        return;
+      }catch(e){}
+    }
+    done();
+  }
+
+  /* 档案袋屏 */
+  function stats(){
+    var items=AR().items||[];
+    var counted=items.filter(isCounted);
+    return {total:items.length, counted:counted.length,
+      sum:r1(counted.reduce(function(a,b){return a+num(b.score);},0)),
+      wait:items.filter(function(i){return i.state==='待核';}).length,
+      no:items.filter(function(i){return i.state==='不计分';}).length,
+      synced:items.filter(function(i){return i.state==='已同步';}).length};
+  }
+  function setQ(v){ ui.q=v; renderList(); }
+  function setStatus(v){ ui.status=v; renderList(); }
+  function setFolder(v){ ui.folder=v; renderList(); }
+  function visibleItems(){
+    var items=(AR().items||[]).slice().sort(function(a,b){return a.seq-b.seq;});
+    if(ui.folder!=='all') items=items.filter(function(i){return i.folder===ui.folder;});
+    if(ui.status==='counted') items=items.filter(isCounted);
+    else if(ui.status==='wait') items=items.filter(function(i){return i.state==='待核';});
+    else if(ui.status==='no') items=items.filter(function(i){return i.state==='不计分';});
+    var q=(ui.q||'').trim();
+    if(q) items=items.filter(function(i){
+      var hay=[i.name, typeOf(i.type).label, folderOf(i.folder).name, i.paste,
+        i.match&&i.match.clause, i.match&&i.match.why].join(' ');
+      return hay.indexOf(q)>=0;
+    });
+    return items;
+  }
+  function renderArchive(){
+    var wrap=document.getElementById('archWrap');
+    if(!wrap) return;
+    var pf=getProfile();
+    var st=stats();
+    var h='';
+    h+='<div class="card" style="padding:16px 18px"><div class="h2">我的综测档案袋</div>';
+    h+='<div class="h2s">上传的奖状、打卡记录、证书都在这里：原图只存本机，系统按综测细则匹配条款、算出建议分，「待核」不计分、确认后才计入。年级决定部分口径，改年级会按新口径重算。</div>';
+    if(pf){
+      h+='<div class="arch-stats">'+
+        '<div class="arch-stat"><b>'+esc(pf.grade)+'</b>当前年级</div>'+
+        '<div class="arch-stat"><b>'+esc(pf.cohort)+' 级</b>入学级（培养方案版本）</div>'+
+        '<div class="arch-stat"><b>'+esc(pf.at||'—')+'</b>建档日期</div>'+
+        '<div class="arch-stat"><b>'+st.total+'</b>材料件数</div>'+
+        '<div class="arch-stat"><b>'+st.sum.toFixed(1)+'</b>已计分合计</div>'+
+        '<div class="arch-stat"><b>'+st.wait+'</b>待核件数</div>'+
+        '<div class="arch-stat"><b>'+st.synced+'</b>已写入账本</div></div>';
+    }
+    h+='<div class="arch-acts">'+
+      '<button class="a-btn pri" onclick="ARCH.openUpload()">＋ 上传材料</button>'+
+      '<button class="a-btn" onclick="ARCH.syncToLedger()">↻ 同步到综测账本</button>'+
+      '<button class="a-btn" onclick="ARCH.exportZip()">⤓ 导出档案袋（zip）</button>'+
+      (pf?'<button class="a-btn" onclick="ARCH.resetProfile()">修改年级/入学级</button>':'')+
+      '</div></div>';
+    h+='<div class="arch-tools">'+
+      '<input class="a-search" id="aQ" placeholder="搜索材料名称 / 类型 / 条款坐标…" value="'+esc(ui.q||'')+'" oninput="ARCH.setQ(this.value)">'+
+      '<button class="a-btn mini'+(ui.status==='all'?' pri':'')+'" onclick="ARCH.setStatus(\'all\')">全部</button>'+
+      '<button class="a-btn mini'+(ui.status==='counted'?' pri':'')+'" onclick="ARCH.setStatus(\'counted\')">已计分</button>'+
+      '<button class="a-btn mini'+(ui.status==='wait'?' pri':'')+'" onclick="ARCH.setStatus(\'wait\')">待核</button>'+
+      '<button class="a-btn mini'+(ui.status==='no'?' pri':'')+'" onclick="ARCH.setStatus(\'no\')">不计分</button>'+
+      '</div>';
+    h+='<div class="arch-layout"><div class="folder" id="archFolders"></div>'+
+       '<div class="a-list" id="archList"></div></div>';
+    h+='<div class="hint">原图与记录只在这台浏览器里 · 算不出就说不知道，不猜</div>';
+    wrap.innerHTML=h;
+    renderList();
+  }
+  function renderList(){
+    var fb=document.getElementById('archFolders');
+    var lb=document.getElementById('archList');
+    if(!fb||!lb) return;
+    var items=AR().items||[];
+    var fh='<div class="folder-h">分类文件夹</div>';
+    fh+='<button class="f-item'+(ui.folder==='all'?' on':'')+'" onclick="ARCH.setFolder(\'all\')">'+
+        '<span class="f-ico">🗃️</span>全部材料<span class="f-cnt">'+items.length+'</span></button>';
+    FOLDERS.forEach(function(f){
+      var n=items.filter(function(i){return i.folder===f.key;}).length;
+      fh+='<button class="f-item'+(ui.folder===f.key?' on':'')+'" onclick="ARCH.setFolder(\''+f.key+'\')">'+
+          '<span class="f-ico">'+f.icon+'</span>'+esc(f.name)+'<span class="f-cnt">'+n+'</span></button>';
+      if(f.block) fh+='<div class="f-sub">→ '+esc(blockName(f.block))+'</div>';
+      else fh+='<div class="f-sub">→ 不写账本</div>';
+    });
+    fb.innerHTML=fh;
+    var vis=visibleItems();
+    if(!vis.length){
+      lb.innerHTML='<div class="a-empty">这个分类下还没有材料。<br>点上面的「＋ 上传材料」，奖状照片、讲座打卡截图、证书扫描件都能进档案袋。</div>';
+      return;
+    }
+    var lh='';
+    vis.forEach(function(it){
+      var ty=typeOf(it.type), fo=folderOf(it.folder);
+      var stCls=it.state==='确定'?'st-ok':(it.state==='已同步'?'st-sync':(it.state==='不计分'?'st-no':'st-wait'));
+      var side=it.state==='待核'
+        ? '<div class="a-score wait">待核 · 0</div>'
+        : '<div class="a-score">'+num(it.score).toFixed(1)+'</div>';
+      lh+='<button class="a-card" onclick="ARCH.openDetail(\''+it.id+'\')">'+
+        '<div class="a-thumb"><span>'+fo.icon+'</span></div>'+
+        '<div class="a-main"><div class="a-t">'+esc(it.name)+'</div>'+
+        '<div class="a-m">'+esc(it.year||'')+' · '+esc(ty.label)+' · '+esc(fo.name)+(it.date?' · '+esc(it.date):'')+'</div></div>'+
+        '<div class="a-side">'+side+'<span class="a-state '+stCls+'">'+esc(it.state)+'</span></div></button>';
+    });
+    lb.innerHTML=lh;
+  }
+
+  /* 材料详情弹窗 */
+  function findItem(id){
+    var items=AR().items||[];
+    for(var i=0;i<items.length;i++) if(items[i].id===id) return items[i];
+    return null;
+  }
+  function openDetail(id){
+    var it=findItem(id); if(!it) return;
+    var fo=folderOf(it.folder), ty=typeOf(it.type);
+    var m=match(it.fields||{});
+    var stCls=it.state==='确定'?'st-ok':(it.state==='已同步'?'st-sync':(it.state==='不计分'?'st-no':'st-wait'));
+    var h='';
+    h+='<div class="d-grid"><div>';
+    h+='<div class="d-img" id="dImg">'+(it.fileId?'原图加载中…':'没有上传原图（纯文字记录）')+'</div>';
+    h+='<div class="d-kv" style="margin-top:12px">'+
+      '材料类型：<b>'+esc(ty.label)+'</b><br>'+
+      '归档文件夹：<b>'+esc(fo.name)+'</b>'+(fo.block?'（账本板块：'+esc(blockName(fo.block))+'）':'')+'<br>'+
+      (it.date?'获得日期：<b>'+esc(it.date)+'</b><br>':'')+
+      '建档日期：<b>'+esc(it.createdAt||'—')+'</b><br>'+
+      (it.paste?'原始文字：<b>'+esc(it.paste)+'</b>':'')+
+      '</div>';
+    h+='</div><div>';
+    h+='<div class="m-lab">按当前档案重算的匹配结果 <span class="a-state '+stCls+'">'+esc(it.state)+'</span></div>';
+    var scTxt=(m.state==='确定')?(m.score+' 分'):(m.state==='不计分'?'不计分（0 分）':'待核（暂计 0）');
+    h+='<div class="p-score">'+esc(scTxt)+'</div>';
+    h+='<div class="d-kv" style="margin-top:6px">'+(m.clause?'条款坐标：<b>'+esc(m.clause)+'</b><br>':'')+
+      (it.manual?'本项为手动核分：<b>'+num(it.score).toFixed(1)+' 分</b>　条款：<b>'+esc(it.clause||'未填')+'</b><br>':'')+
+      (it.state==='已同步'?'已写入账本：<b>'+num(it.syncedScore).toFixed(1)+' 分</b>（差额下次同步时补）':'')+'</div>';
+    h+='<div class="d-calc">'+esc(m.why)+'</div>';
+    if(it.state==='待核'){
+      h+='<div class="d-man">'+
+        '<input id="dScore" type="number" step="0.1" min="0" placeholder="手动分">'+
+        '<input id="dClause" class="u-in cl" placeholder="条款坐标，如：细则第六条（四）2" value="'+esc(m.clause||'')+'">'+
+        '<button class="a-btn pri mini" onclick="ARCH.confirmItem(\''+it.id+'\')">确认计入</button></div>';
+      h+='<div class="d-acts">'+
+        '<button class="a-btn mini" onclick="ARCH.rejectItem(\''+it.id+'\')">驳回 · 不计分</button>'+
+        '<button class="a-btn mini" onclick="ARCH.delItem(\''+it.id+'\')">删除材料</button></div>';
+    } else if(it.state==='确定'){
+      h+='<div class="d-man">'+
+        '<input id="dScore" type="number" step="0.1" min="0" value="'+num(it.score)+'">'+
+        '<button class="a-btn mini" onclick="ARCH.applyScore(\''+it.id+'\')">应用改分</button>'+
+        '<input id="dClause" class="u-in cl" placeholder="条款坐标" value="'+esc(it.clause||m.clause||'')+'"></div>';
+      h+='<div class="d-acts">'+
+        '<button class="a-btn pri mini" onclick="ARCH.syncOne(\''+it.id+'\')">↻ 同步到账本</button>'+
+        '<button class="a-btn mini" onclick="ARCH.rejectItem(\''+it.id+'\')">驳回 · 不计分</button>'+
+        '<button class="a-btn mini" onclick="ARCH.delItem(\''+it.id+'\')">删除材料</button></div>';
+    } else if(it.state==='已同步'){
+      h+='<div class="d-acts">'+
+        (num(it.score)!==num(it.syncedScore)?'<button class="a-btn mini" onclick="ARCH.syncOne(\''+it.id+'\')">补同步差额</button>':'')+
+        '<button class="a-btn mini" onclick="ARCH.unsyncItem(\''+it.id+'\')">从账本撤回</button>'+
+        '<button class="a-btn mini" onclick="ARCH.rejectItem(\''+it.id+'\')">驳回 · 不计分</button>'+
+        '<button class="a-btn mini" onclick="ARCH.delItem(\''+it.id+'\')">删除材料</button></div>';
+    } else {
+      h+='<div class="d-acts">'+
+        '<button class="a-btn mini" onclick="ARCH.restoreItem(\''+it.id+'\')">恢复按细则重算</button>'+
+        '<button class="a-btn mini" onclick="ARCH.delItem(\''+it.id+'\')">删除材料</button></div>';
+    }
+    h+='</div></div>';
+    UI.dlg({title: it.name, body: h});
+    if(it.fileId){
+      IDB.get(it.fileId, function(buf){
+        var box=document.getElementById('dImg'); if(!box) return;
+        try{
+          var blob=new Blob([buf], {type:it.fileType||'image/png'});
+          var url=URL.createObjectURL(blob);
+          box.innerHTML='<img src="'+url+'" alt="材料原图">';
+        }catch(e){ box.textContent='原图在本机存储里，此环境无法预览'; }
+      });
+    }
+  }
+  function afterEdit(){ save(); renderHome(); }
+  function confirmItem(id){
+    var it=findItem(id); if(!it) return;
+    var v=parseFloat(val('dScore'));
+    if(isNaN(v)||v<0){ alert('手动分要填一个不小于 0 的数；拿不准就维持「待核」，别猜。'); return; }
+    it.score=r1(v); it.state='确定'; it.manual=true; it.clause=(val('dClause')||'').trim();
+    afterEdit(); UI.close();
+  }
+  function applyScore(id){
+    var it=findItem(id); if(!it) return;
+    var v=parseFloat(val('dScore'));
+    if(isNaN(v)||v<0){ alert('改分要填一个不小于 0 的数。'); return; }
+    it.score=r1(v); it.manual=true; it.clause=(val('dClause')||'').trim()||it.clause||'';
+    afterEdit(); UI.close();
+  }
+  function rejectItem(id){
+    var it=findItem(id); if(!it) return;
+    it.state='不计分'; it.score=0; afterEdit(); UI.close();
+  }
+  function restoreItem(id){
+    var it=findItem(id); if(!it) return;
+    var m=match(it.fields||{});
+    it.match=m; it.score=(m.state==='确定'?m.score:0);
+    it.state=(m.state==='确定'?'确定':(m.state==='不计分'?'不计分':'待核'));
+    it.manual=false; afterEdit(); UI.close();
+  }
+  function delItem(id){
+    var it=findItem(id); if(!it) return;
+    if(it.state==='已同步'){
+      alert('这项已经写进账本了。先从账本撤回，再删材料。');
+      return;
+    }
+    if(!confirm('删除「'+it.name+'」？原图和记录会一起从本机移除，不可恢复。')) return;
+    IDB.del(id);
+    AR().items=AR().items.filter(function(x){return x.id!==id;});
+    afterEdit(); UI.close();
+  }
+
+  /* 同步：把已计分材料累加进账本板块（yr.arch，与手填条目相加后封顶） */
+  function syncOne(id){
+    var it=findItem(id); if(!it) return;
+    if(!isCounted(it)){ alert('「待核」和「不计分」的材料不写账本——先确认或手动核分。'); return; }
+    var fo=folderOf(it.folder);
+    if(!fo.block){ alert('「'+fo.name+'」不对应账本板块，不写账本。'); return; }
+    var delta=r1(num(it.score)-num(it.syncedScore));
+    var yr=YG(it.year||S.year);
+    if(!yr.arch[fo.block]) yr.arch[fo.block]=0;
+    yr.arch[fo.block]=r1(num(yr.arch[fo.block])+delta);
+    it.syncedScore=num(it.score); it.state='已同步';
+    afterEdit(); UI.close();
+  }
+  function syncToLedger(){
+    var items=(AR().items||[]).filter(isCounted);
+    if(!items.length){ alert('没有可同步的材料——「待核」要先确认或手动核分。'); return; }
+    var done=0, add=0, msg=[];
+    items.forEach(function(it){
+      var fo=folderOf(it.folder);
+      if(!fo.block){ msg.push('跳过「'+it.name+'」：不对应账本板块'); return; }
+      var delta=r1(num(it.score)-num(it.syncedScore));
+      if(it.state==='已同步' && Math.abs(delta)<1e-9) return;
+      var yr=YG(it.year||S.year);
+      if(!yr.arch[fo.block]) yr.arch[fo.block]=0;
+      yr.arch[fo.block]=r1(num(yr.arch[fo.block])+delta);
+      it.syncedScore=num(it.score); it.state='已同步';
+      done++; add+=delta;
+      msg.push('＋'+delta.toFixed(1)+' → '+blockName(fo.block)+'（'+it.name+'）');
+    });
+    save(); renderHome(); renderArchive();
+    if(!done){ alert('全部材料都已同步过，没有新差额。'); return; }
+    alert('已同步 '+done+' 项，共 '+r1(add).toFixed(1)+' 分累加进账本对应板块：\n\n'+msg.join('\n')+
+      '\n\n板块总分为「基础分 + 手填条目 + 档案袋附加」，相加后按细则封顶。想改去模块屏手工改。');
+  }
+  function unsyncItem(id){
+    var it=findItem(id); if(!it) return;
+    if(it.state!=='已同步') return;
+    var fo=folderOf(it.folder);
+    var yr=YG(it.year||S.year);
+    if(fo.block && yr.arch[fo.block]!==undefined){
+      yr.arch[fo.block]=r1(num(yr.arch[fo.block])-num(it.syncedScore));
+    }
+    it.syncedScore=0; it.state='确定';
+    afterEdit(); UI.close();
+  }
+  function rematchAll(){
+    (AR().items||[]).forEach(function(it){
+      if(it.manual) return;
+      var m=match(it.fields||{});
+      it.match=m; it.score=(m.state==='确定'?m.score:0);
+      it.state=(m.state==='确定'?'确定':(m.state==='不计分'?'不计分':'待核'));
+    });
+    save();
+  }
+  function resetProfile(){
+    if(!confirm('修改年级会按新口径重算体育课等材料的分值（手动核过的项不动），确定重新选择吗？')) return;
+    lsDel(PROFILE_KEY);
+    gate();
+  }
+  /* 样例 = 页面自带的那套演示档案（大一 / 2026 级 + 四门课 + 两件材料） */
+  function useSample(){
+    saveProfileWith('大一','2026');
+    S = seed(); S.year = '大一'; save();
+    pmPick.grade = null; pmPick.cohort = null;
+    try{ UI.close(); }catch(e){}
+    renderHome();
+  }
+  function clearAll(){
+    if(!confirm('清空所有已填数据（分数、课程、材料、档案袋），回到空白状态重新建档？\n\n样例数据不会丢，随时可用「载入样例数据」找回。')) return;
+    S = blankState(S.theme); S.year = '大一'; save();
+    lsDel(PROFILE_KEY);
+    pmPick.grade = null; pmPick.cohort = null;
+    try{ UI.close(); }catch(e){}
+    renderHome(); gate();
+  }
+
+  /* 导出 zip：零依赖，STORED + crc32 */
+  var CRC_T=(function(){ var t=[]; for(var n=0;n<256;n++){ var c=n; for(var k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; })();
+  function crc32(u8){
+    var c=0xFFFFFFFF;
+    for(var i=0;i<u8.length;i++) c=CRC_T[(c^u8[i])&0xFF]^(c>>>8);
+    return (c^0xFFFFFFFF)>>>0;
+  }
+  function str2u8(s){
+    var out=[], i, c;
+    for(i=0;i<s.length;i++){
+      c=s.charCodeAt(i);
+      if(c<0x80) out.push(c);
+      else if(c<0x800) out.push(0xC0|(c>>6), 0x80|(c&63));
+      else out.push(0xE0|(c>>12), 0x80|((c>>6)&63), 0x80|(c&63));
+    }
+    return new Uint8Array(out);
+  }
+  function makeZip(entries){
+    var chunks=[], central=[], offset=0;
+    entries.forEach(function(e){
+      var nb=str2u8(e.name), nd=e.data, crc=crc32(nd);
+      var lh=new Uint8Array(30+nb.length), dv=new DataView(lh.buffer);
+      dv.setUint32(0,0x04034b50,true); dv.setUint16(4,20,true); dv.setUint16(6,0x0800,true);
+      dv.setUint16(8,0,true); dv.setUint16(10,0,true); dv.setUint16(12,0,true);
+      dv.setUint32(14,crc,true); dv.setUint32(18,nd.length,true); dv.setUint32(22,nd.length,true);
+      dv.setUint16(26,nb.length,true); dv.setUint16(28,0,true);
+      lh.set(nb,30);
+      chunks.push(lh); chunks.push(nd);
+      var ch=new Uint8Array(46+nb.length), cv=new DataView(ch.buffer);
+      cv.setUint32(0,0x02014b50,true); cv.setUint16(4,20,true); cv.setUint16(6,20,true);
+      cv.setUint16(8,0x0800,true); cv.setUint16(10,0,true); cv.setUint16(12,0,true); cv.setUint16(14,0,true);
+      cv.setUint32(16,crc,true); cv.setUint32(20,nd.length,true); cv.setUint32(24,nd.length,true);
+      cv.setUint16(28,nb.length,true); cv.setUint16(30,0,true); cv.setUint16(32,0,true);
+      cv.setUint16(34,0,true); cv.setUint16(36,0,true); cv.setUint32(38,0,true);
+      cv.setUint32(42,offset,true); ch.set(nb,46);
+      central.push(ch);
+      offset+=lh.length+nd.length;
+    });
+    var cdSize=central.reduce(function(a,b){return a+b.length;},0);
+    var end=new Uint8Array(22), ev=new DataView(end.buffer);
+    ev.setUint32(0,0x06054b50,true); ev.setUint16(4,0,true); ev.setUint16(6,0,true);
+    ev.setUint16(8,entries.length,true); ev.setUint16(10,entries.length,true);
+    ev.setUint32(12,cdSize,true); ev.setUint32(16,offset,true); ev.setUint16(20,0,true);
+    return new Blob(chunks.concat(central,[end]), {type:'application/zip'});
+  }
+  function safeName(s){
+    return String(s||'').replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,40) || 'material';
+  }
+  function extOf(t){
+    t=String(t||'');
+    if(t.indexOf('png')>=0) return 'png';
+    if(t.indexOf('jpeg')>=0||t.indexOf('jpg')>=0) return 'jpg';
+    if(t.indexOf('gif')>=0) return 'gif';
+    if(t.indexOf('webp')>=0) return 'webp';
+    return 'img';
+  }
+  function exportZip(){
+    var items=(AR().items||[]).slice().sort(function(a,b){return a.seq-b.seq;});
+    if(!items.length){ alert('档案袋是空的，先上传材料再导出。'); return; }
+    var pf=getProfile()||{};
+    var st=stats();
+    var manifest={app:'冀测通 · 学业记录 — 综测档案袋', version:1,
+      exportedAt:new Date().toISOString(), profile:pf, stats:st, items:[]};
+    var pending=[];
+    items.forEach(function(it){
+      var fo=folderOf(it.folder), ty=typeOf(it.type);
+      var rec={id:it.id, folder:fo.name, type:ty.label, name:it.name, date:it.date,
+        state:it.state, score:num(it.score), manual:!!it.manual,
+        clause:it.clause||(it.match&&it.match.clause)||'',
+        calc:(it.match&&it.match.why)||'', file:null, paste:it.paste||''};
+      if(it.fileId){
+        var fn=fo.key+'/'+safeName(it.name)+'_'+it.seq+'.'+extOf(it.fileType);
+        rec.file=fn;
+        pending.push({fn:fn, id:it.id, rec:rec});
+      }
+      manifest.items.push(rec);
+    });
+    function build(files){
+      var entries=[];
+      pending.forEach(function(p, i){ if(files[i]) entries.push({name:p.fn, data:new Uint8Array(files[i])}); });
+      entries.push({name:'manifest.json', data:str2u8(JSON.stringify(manifest, null, 2))});
+      var blob=makeZip(entries);
+      try{
+        var a=document.createElement('a');
+        var url=URL.createObjectURL(blob);
+        a.href=url; a.download='综测档案袋_'+(pf.grade||'未设年级')+'_'+new Date().toISOString().slice(0,10)+'.zip';
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ try{ URL.revokeObjectURL(url); a.remove(); }catch(e){} }, 800);
+      }catch(e){ alert('导出失败：'+e.message); }
+    }
+    if(!pending.length){ build([]); return; }
+    var files=[], n=0;
+    pending.forEach(function(p){
+      IDB.get(p.id, function(buf){ files[n++]=buf; if(n===pending.length) build(files); });
+    });
+  }
+
+  /* #demo=1 演示档案 */
+  function seedDemo(){
+    if(!getProfile()) saveProfileWith('大二','2025');
+    if((AR().items||[]).length) return;
+    var demo=[
+      {type:'comp', name:'全国大学生数学建模竞赛 · 全国一等奖', date:'2025-09-15',
+       fields:{type:'comp', level:'国甲类', prize:'一等', place:1, firstUnit:true}},
+      {type:'sport', name:'国家学生体质健康标准测试 · 良好', date:'2025-06-20',
+       fields:{type:'sport', result:'良好'}},
+      {type:'cadre', name:'班级学习委员 · 任职考核优秀', date:'2025-07-01',
+       fields:{type:'cadre', role:'main', assess:'优秀'}},
+      {type:'lecture', name:'「大模型前沿进展」讲座打卡 ×3', date:'2025-10-10',
+       fields:{type:'lecture', times:3}}
+    ];
+    demo.forEach(function(x, i){
+      var m=match(x.fields);
+      var ty=typeOf(x.type), fo=folderOf(ty.folder);
+      AR().items.push({id:'demo-'+(i+1), seq:i+1, type:x.type, folder:fo.key,
+        name:x.name, date:x.date, paste:'', fields:x.fields, fileId:null, fileType:'',
+        match:m, score:(m.state==='确定'?m.score:0), year:S.year,
+        state:(m.state==='确定'?'确定':(m.state==='不计分'?'不计分':'待核')),
+        manual:false, syncedScore:0, clause:m.clause||'', createdAt:'2026-10-25'});
+    });
+    AR().seq=demo.length;
+    save();
+  }
+
+  return {
+    gate:gate, pickGrade:pickGrade, pickCohort:pickCohort, saveProfile:saveProfile,
+    resetProfile:resetProfile, rematchAll:rematchAll, useSample:useSample, clearAll:clearAll,
+    openUpload:openUpload, onTypeChange:onTypeChange,
+    parsePaste:parsePaste, previewMatch:previewMatch, saveMaterial:saveMaterial,
+    renderArchive:renderArchive, renderList:renderList, setQ:setQ, setStatus:setStatus, setFolder:setFolder,
+    openDetail:openDetail,
+    confirmItem:confirmItem, applyScore:applyScore, rejectItem:rejectItem,
+    restoreItem:restoreItem, delItem:delItem,
+    syncOne:syncOne, syncToLedger:syncToLedger, unsyncItem:unsyncItem,
+    exportZip:exportZip, seedDemo:seedDemo, stats:stats, match:match,
+    crc32:crc32, makeZip:makeZip, str2u8:str2u8, idb:IDB
+  };
+})();
+
+/* 拖拽 */
+['drop', 'drop2'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  ['dragenter','dragover'].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); el.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); el.classList.remove('over'); }));
+  el.addEventListener('drop', e => UI.readFiles(e.dataTransfer.files));
+});
+document.getElementById('file').addEventListener('change', e => UI.readFiles(e.target.files));
+document.getElementById('mask').addEventListener('click', e => { if (e.target.id === 'mask') UI.close(); });
+/* Esc：先关弹窗，没弹窗就返回上一级 */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const mask = document.getElementById('mask');
+  if (mask.classList.contains('show')) { UI.close(); return; }
+  const cur = document.querySelector('.screen.act');
+  if (cur && cur.id !== 'sc-home') UI.back();
+});
+
+/* 启动 */
+document.documentElement.dataset.theme = S.theme || 'calm';
+/* #demo=1 载入样例（数据+档案材料+已建档）；#demo=1&gate=1 载入样例但保留首访建档窗（自检用） */
+const _HASH = location.hash || '';
+if (_HASH.indexOf('demo=1') >= 0) {
+  if (_HASH.indexOf('gate=1') >= 0) { S = seed(); S.year = '大一'; save(); }
+  else { ARCH.useSample(); ARCH.seedDemo(); }
+}
+/* #go=de / #go=doc / #go=gpa …：深链直达某屏，分享与截图用 */
+const _go = (_HASH.match(/go=([a-z0-9]+)/) || [])[1];
+if (_go) setTimeout(function () {
+  if (_go === 'doc') UI.go('doc');
+  else if (DATA.blocks.some(b => b.key === _go)) UI.openMod(_go);
+  else UI.go(_go);
+}, 80);
+renderHome();
+ARCH.gate();
+</script>
+</body>
+</html>
