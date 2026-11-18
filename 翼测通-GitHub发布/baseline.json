@@ -10,7 +10,7 @@
   "views": 0,
   "unique_visitors": 0,
   "clones": 0,
-  "note": "仓库创建被 GitHub connector 403 拒绝，基线为账号当前状态；仓库建成后需重新抓一次 T0 基线",
+  "note": "账号 0 粉丝，仓库刚建；流量数据需 7 天后抓，GitHub 只留 14 天",
   "files": [
     {
       "path": "LICENSE",
@@ -68,5 +68,15 @@
       "path": "scripts/zongce_ledger.py",
       "md5": "53cfa1df06fa83fe7e605b781ff02d17"
     }
-  ]
+  ],
+  "repo_created_at": "2026-11-18",
+  "t0_captured_at": "2026-11-18T11:18:33",
+  "t0_from_screenshot": {
+    "stars": 0,
+    "watchers": 0,
+    "forks": 0,
+    "followers": 0,
+    "commits": 1
+  },
+  "structure_issue": "首次上传把最外层文件夹拖入，14 个文件位于 翼测通-GitHub发布/拖这个文件夹进GitHub/ 下，README 不在根目录；需补传到根目录"
 }
